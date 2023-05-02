@@ -17,14 +17,14 @@ function setup_symlinks {
 	echo -e "\u001b[7m Setting up symlinks... \u001b[0m"
 	mkdir -p ~/.config
 	# ln -sfnv "$shellhome"/config/nvim/"          ~/.config/
-	ln -sfnv "$shellhome"/config/lazygit/ ~/.config/
+	# ln -sfnv "$shellhome"/config/lazygit/ ~/.config/
 	ln -sfnv "$shellhome"/config/sheldon/ ~/.config/
 
 	ln -sfnv "$shellhome"/bash/zshrc ~/.zshrc
 	ln -sfnv "$shellhome"/zshenv ~/.zshenv
 	ln -sfnv "$shellhome"/bash/bashrc ~/.bashrc
 	ln -sfnv "$shellhome"/profile ~/.profile
-	ln -sfnv "$shellhome"/xinitrc ~/.xinitrc
+	# ln -sfnv "$shellhome"/xinitrc ~/.xinitrc
 	# ln -sfnv "$shellhome"/Rprofile ~/.Rprofile
 	# ln -sfnv "$shellhome"/Renviron ~/.Renviron
 	# ln -sfnv "$shellhome"/                ~/.
