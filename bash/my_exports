@@ -1,0 +1,164 @@
+#!/bin/bash
+# Environment variables
+
+export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
+export ZSH_TMUX_AUTOSTART='false'
+export ZSH_TMUX_AUTOSTART_ONCE='false'
+export ZSH_TMUX_AUTOCONNECT='false'
+export DISABLE_AUTO_TITLE='true'
+
+# export GPG_TTY=$(tty)
+
+export R_HOME=/usr/lib/R
+
+#export VIMRUNTIME=/usr/share/nvim/runtime
+
+export LANG=ru_RU.UTF-8
+
+export LD_LIBRARY_PATH=$HOME/anaconda3/envs/JupyterSystemEnv/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+
+# {{{ History and path
+
+export HISTCONTROL=ignoreboth:erasedups
+
+# XDG Paths
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Ibus settings
+
+#type ibus-setup in terminal to change settings and start the daemon
+#delete the hashtags of the next lines and restart
+#export GTK_IM_MODULE=ibus
+#export XMODIFIERS=@im=dbus
+#export QT_IM_MODULE=ibus
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Default Browers, File Manager, and 256 colors.
+if programExists brave-browser; then
+	export BROWSER=$(which brave-browser)
+elif programExists google-chrome; then
+	export BROWSER=$(which google-chrome)
+elif programExists yandex-browser; then
+	export BROWSER=$(which yandex-browser)
+elif programExists firefox; then
+	export BROWSER=$(which firefox)
+else
+	export BROWSER=""
+fi
+export FILE=ranger
+export TERM=xterm-256color
+
+# export TERM=alacritty
+export WM=awesome
+
+# -------------------------------------------------------------------------- }}}
+# {{{ autodoc location.
+
+# if  dirExists ${GITHOME}/autodoc; then
+#   AUTODOCPATH=${GITHOME}/autodoc
+# else
+#   [[ $echoWarning == 1 ]] && echo "WARNING: autodoc is not installed."
+#   AUTODOCPATH=""
+# fi
+# export AUTODOCPATH
+
+# -------------------------------------------------------------------------- }}}
+# {{{ docbld location and function.  These must go together.
+
+# if dirExists ${GITHOME}/docbld; then
+#   DOCBLDPATH=${GITHOME}/docbld
+# else
+#   [[ $echoWarning == 1 ]] && echo "WARNING: docbld is not installed."
+#   DOCBLDPATH=""
+# fi
+# export DOCBLDPATH
+
+# -------------------------------------------------------------------------- }}}
+# {{{ dotnet
+
+# if dirExists ${HOME}/.dotnet; then
+#   DOTNET_ROOT=${HOME}/.dotnet
+#   export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+# else
+#   DOTNET_ROOT=""
+# fi
+# export DOTNET_ROOT
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Editor.
+
+export MANWIDTH=76
+if programExists nvim; then
+	EDITOR=$(which nvim)
+elif programExists lvim; then
+	EDITOR=$(which lvim)
+else
+	EDITOR=$(which vim)
+fi
+export EDITOR
+
+export VISUAL="nvim"
+export PAGER="less"
+export READER="zathura"
+# -------------------------------------------------------------------------- }}}
+# {{{ FZF customizations
+
+# export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+# Fzf
+export FZF_DEFAULT_COMMAND='fd --hidden --follow --exclude=.git --exclude=node_modules'
+export FZF_COMPLETION_TRIGGER=','
+export FZF_DEFAULT_OPTS="
+--layout=reverse --info=inline --height=80% --multi --cycle --margin=1 --border=rounded
+--preview '([[ -f {} ]] && (bat --style=numbers --color=always --line-range=:500 {} || cat {})) || ([[ -d {} ]] \
+&& (exa -TFl --group-directories-first --icons --git -L 2 --no-user {} | less)) || echo {} 2> /dev/null | head -200'
+--prompt=' ' --pointer='>' --marker='✔'
+--color='hl:148,hl+:154,prompt:blue,pointer:032,marker:010,bg+:000,gutter:000'
+--preview-window=right:65%
+--bind '?:toggle-preview'
+--bind 'ctrl-a:select-all'
+--bind 'ctrl-y:execute-silent(echo {+} | clipcopy)'
+--bind 'ctrl-e:execute(nvim-qt {+})'
+--bind 'ctrl-v:execute(code {+})'"
+
+export FZF_CTRL_T_COMMAND='fd -t f -HF -E=.git -E=node_modules'
+export FZF_TMUX_OPTS='-p 90%'
+
+# -------------------------------------------------------------------------- }}}
+# {{{ newdoc location and functions.  These must go together.
+
+# if dirExists ${GITHOME}/newdoc; then
+#    NEWDOCPATH=${GITHOME}/newdoc
+# else
+#    [[ $echoWarning == 1 ]] && echo "WARNING: newdoc is not installed."
+#   NEWDOCPATH=""
+# fi
+# export NEWDOCPATH
+#
+# if [[ -d ${NEWDOCPATH} ]]; then
+#   newdoc() {
+#     ${NEWDOCPATH}/newdoc "$@"
+#   }
+# fi
+
+# -------------------------------------------------------------------------- }}}
+#
+
+#export NVIM_APPNAME="${NVIM_APPNAME:-"lvim"}"
+#export LUNARVIM_RUNTIME_DIR="${LUNARVIM_RUNTIME_DIR:-"/home/ru/.local/share/lunarvim"}"
+#export LUNARVIM_CONFIG_DIR="${LUNARVIM_CONFIG_DIR:-"/home/ru/.config/lvim"}"
+#export LUNARVIM_CACHE_DIR="${LUNARVIM_CACHE_DIR:-"/home/ru/.cache/lvim"}"
+#export LUNARVIM_BASE_DIR="${LUNARVIM_BASE_DIR:-"/home/ru/.local/share/lunarvim/lvim"}"
+
+#alias lvim="nvim -u /home/ru/.local/share/lunarvim/lvim/init.lua"
+
+# alias nvim-chad="NVIM_APPNAME=nvim-NvChad nvim"
+alias nvim-astro="NVIM_APPNAME=nvim-AstroNvim nvim"
+alias nvim-lazy="NVIM_APPNAME=nvim-LazyVim nvim"
+alias nvim-kick="NVIM_APPNAME=nvim-Kickstart nvim"
+alias nvim-lazyman="NVIM_APPNAME=nvim-Lazyman nvim"
+
+#alias v="NVIM_APPNAME=nvim nvim"

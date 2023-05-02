@@ -1,0 +1,69 @@
+#!/bin/bash
+# {{{ Interactive check
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Ignore upper and lowercase when TAB completion
+
+bind "set completion-ignore-case on"
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Disable ctrl-s, ctrl-q, and set infinite history.
+
+stty -ixon
+HISTSIZE='' HISTFILESIZE=''
+
+# -------------------------------------------------------------------------- }}}
+# Define directory exports that my_functions use.
+# BBHOME=$HOME/bb
+# export BBHOME
+
+CFGHOME=$HOME/.config
+export CFGHOME
+
+GITHOME=$HOME/REPOS
+export GITHOME
+
+GITPATH=$GITHOME
+export GITPATH
+
+DOTHOME=$GITHOME/reinst
+export DOTHOME
+
+BASHHOME=$GITHOME/shells
+export BASHHOME
+
+BINHOME=$BASHHOME/bin
+export BINHOME
+
+# SSHHOME=$GITHOME/ssh
+# export SSHHOME
+#
+# WIKIHOME=$GITHOME/wiki
+# export WIKIHOME
+
+# {{{ Customize my shell. Array order matters.
+
+my_array=("functions" "exports" "aliases" "paths" "completions" "prompt")
+
+for m in "${my_array[@]}"; do
+	[[ -f "$BASHHOME/my_$m" ]] && source "$BASHHOME/my_$m"
+done
+
+# Load my keys.
+# sshkeys
+
+# -------------------------------------------------------------------------- }}}
+echo ${HOSTNAME} "on" ${OSTYPE}
+
+# Source the Lazyman shell initialization for aliases and nvims selector
+# shellcheck source=.config/nvim-Lazyman/.lazymanrc
+#[ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
+# Source the Lazyman .nvimsbind for nvims key binding
+# shellcheck source=.config/nvim-Lazyman/.nvimsbind
+#[ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+if command -v zoxide >/dev/null; then
+	eval "$(zoxide init bash)"
+fi

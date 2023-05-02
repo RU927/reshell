@@ -1,0 +1,301 @@
+#!/bin/bash
+
+# {{{ A check for the existence of a directory.
+
+dirExists() {
+	[[ -d "$1" ]]
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ A check for the existence of a file.
+
+fileExists() {
+	[[ -f "$1" ]]
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ A check for the host name.
+
+hostName() {
+	[[ ${HOSTNAME} =~ "$1" ]]
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ A check for the existence of a program on my path.
+
+programExists() {
+	which "$1" &>/dev/null
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ A check for the operating system type.
+
+osType() {
+	[[ ${OSTYPE} =~ "$1" ]]
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Append to PATH
+
+appendToPath() {
+	if dirExists "$1"; then
+		[[ ":$PATH:" != *"$1"* ]] && export PATH="${PATH}:$1"
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Prepend to PATH
+
+prependToPath() {
+	if dirExists "$1"; then
+		[[ ":$PATH:" != *"$1"* ]] && export PATH="$1:${PATH}"
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Append to INFOPATH
+
+appendToInfoPath() {
+	if dirExists "$1"; then
+		[[ ":$INFOPATH:" != *"$1"* ]] && export INFOPATH="${INFOPATH}:$1"
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Append to MANPATH
+
+appendToManPath() {
+	if dirExists "$1"; then
+		[[ ":$MANPATH:" != *"$1"* ]] && export MANPATH="${MANPATH}:$1"
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Set terminal title.
+
+title() { echo -n -e "\033]0;$1\007"; }
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Generating a new SSH key and adding it to the ssh-agent
+#     https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+sshkeys() {
+	if [[ -d $SSHHOME ]]; then
+		eval "$(ssh-agent -s)"
+		for key in $(ls $SSHHOME/*.pub); do
+			ssh-add -q "${key%.*}"
+		done
+	fi
+}
+
+sshlist() {
+	ps aux | awk '/ssh-agent -s/'
+}
+
+sshme() {
+	echo "My ssh-agent PID ${SSH_AGENT_PID}"
+}
+
+sshkill() {
+	killall ssh-agent
+}
+
+latexmkkill() {
+	for pid in $(ps aux | awk '/latexmk/ {print $2}'); do kill -9 $pid; done
+	for pid in $(ps aux | awk '/perl/    {print $2}'); do kill -9 $pid; done
+}
+
+sshstart() {
+	if programExists /etc/init.d/ssh; then
+		sudo /etc/init.d/ssh start
+	fi
+}
+
+sshstop() {
+	if programExists /etc/init.d/ssh; then
+		sudo /etc/init.d/ssh stop
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ main moves me to main and shows me a few commits.
+
+br() {
+	git co $1
+}
+
+main() {
+	br main
+	clear
+	git logg -15
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Grep my history for a prior command I used.
+
+hg() {
+	history | grep "$1"
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ cj & gh are functions that I rewrite all the time to simplify my life.
+
+cj() {
+	newdoc --dir=$1/$2 --file=$2 --title=$2 $3 $4
+}
+
+dh() {
+	clear && docbld clobber && docbld texx && ll && zathura $1
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Use LaTeX make to generate a document.
+
+pdf() {
+	latexmk -pdf -verbose -file-line-error -synctex=1 -interaction=nonstopmode -cd $1
+}
+
+# -------------------------------------------------------------------------- }}}
+# {{{ Archvie extractor
+
+# ex = EXtractor for all kinds of archives
+# usage: ex <file>
+
+ex() {
+	if [ -f $1 ]; then
+		case $1 in
+		*.tar.bz2) tar xjf $1 ;;
+		*.tar.gz) tar xzf $1 ;;
+		*.bz2) bunzip2 $1 ;;
+		*.rar) unrar x $1 ;;
+		*.gz) gunzip $1 ;;
+		*.tar) tar xf $1 ;;
+		*.tbz2) tar xjf $1 ;;
+		*.tgz) tar xzf $1 ;;
+		*.zip) unzip $1 ;;
+		*.Z) uncompress $1 ;;
+		*.7z) 7z x $1 ;;
+		*deb) ar x $1 ;;
+		*.tar.xz) tar xf $1 ;;
+		*.tar.zst) unzstd $1 ;;
+		*) echo "'$1' cannot be extracted via ex()" ;;
+		esac
+	else
+		echo "'$1' is not a valid file"
+	fi
+}
+
+# -------------------------------------------------------------------------- }}}
+
+function man() {
+	env \
+		LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+		LESS_TERMCAP_md=$(printf "\e[1;36m") \
+		LESS_TERMCAP_me=$(printf "\e[0m") \
+		LESS_TERMCAP_se=$(printf "\e[0m") \
+		LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+		LESS_TERMCAP_ue=$(printf "\e[0m") \
+		LESS_TERMCAP_us=$(printf "\e[1;32m") \
+		PAGER="${commands[less]:-$PAGER}" \
+		_NROFF_U=1 \
+		PATH="$HOME/bin:$PATH" \
+		man "$@"
+}
+
+# Only show files which have $1 present in contents
+faz() {
+	local line
+	line=$(rg "$1" | fzf) &&
+		$EDITOR $(cut -d':' -f1 <<<"$line") +$(cut -d':' -f2 <<<"$line")
+}
+
+fz() {
+	local line
+	line=$(rg "$1" | fzf) &&
+		$EDITOR $(cut -d':' -f1 <<<"$line") +$(cut -d':' -f2 <<<"$line")
+}
+
+todos() {
+	cd "$NOTES_ROOT" || return
+	$EDITOR "$(rg -le '- \[ \]' --sort created | fzf)"
+	cd - || return
+}
+
+unLock() {
+	for pid in $(ps aux | awk 'apt {print $2}'); do
+		kill -9 $pid
+	done
+}
+# 	sudo lsof /var/lib/dpkg/lock
+# 	sudo lsof /var/lib/apt/lists/lock
+# 	sudo lsof /var/cache/apt/archives/lock
+# 	sudo kill -9 PID
+# 	sudo rm /var/lib/apt/lists/lock
+# 	sudo rm /var/cache/apt/archives/lock
+# 	sudo rm /var/lib/dpkg/lock
+# 	sudo dpkg --configure -a
+#
+# 	sudo lsof /var/lib/dpkg/lock-frontend
+# 	sudo kill -9 PID
+# 	sudo rm /var/lib/dpkg/lock-frontend
+# 	sudo dpkg --configure -a
+# }
+
+setvenv() {
+	if [[ ! -d "$1" ]]; then
+		python3 -m venv "$1"
+	fi
+	source "$1"/bin/activate
+	if fileExists requirements.txt; then
+		pip install -r requirements.txt
+	fi
+}
+
+set_venv() {
+	if dirExists "$1"; then
+		source "$1"/bin/activate
+	else
+		python3 -m venv "$1"
+		source "$1"/bin/activate
+	fi
+	if fileExists requirements.txt; then
+		pip install -r requirements.txt
+	fi
+}
+
+pyVenv() {
+	if [ $# -eq 0 ]; then # Для работы скрипта необходим входной параметр.
+		echo "Вызовите сценарий с номером версии: x.y.x "
+	fi
+
+	PyVenvDir=$(pwd)
+	PyVersionDir=$HOME/.localpython/"$1"
+	PyBinDir=$PyVersionDir/bin
+	PySrcDir=$PyVersionDir
+	PyVersion=python"${1%.*}"
+	PyVenvName=venv"$1" #ошибка,если не venv в 3.6.9, в 3.5.7, 3.9.1 - норм
+
+	if [[ ! -d $PyVersionDir ]]; then
+		mkdir -p $PyVersionDir
+	fi
+
+	if [[ ! -d $PySrcDir ]]; then
+		mkdir -p $PySrcDir
+	fi
+	if [[ ! -d $PyBinDir ]]; then
+		cd $PySrcDir
+		wget http://www.python.org/ftp/python/"$1"/Python-"$1".tgz
+		tar -zxvf Python-"$1".tgz
+		rm -rf Python-"$1".tgz
+		cd Python-"$1"
+		./configure --prefix=$PyVersionDir
+		make
+		make install
+		cd $PyVenvDir
+	fi
+	# if [[ ! -d $PyVenvName ]]; then
+	$PyBinDir/$PyVersion -m venv $PyVenvName
+	# fi
+
+	source $PyVenvName/bin/activate
+}
