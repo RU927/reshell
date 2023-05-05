@@ -70,7 +70,7 @@ checkEnv
 
 install_depend() {
 	## Check for dependencies.
-	DEPENDENCIES='autojump bash bash-completion tar'
+	DEPENDENCIES='autojump bash bash-completion zsh'
 	echo -e "${YELLOW}Installing dependencies...${RC}"
 	if [[ $PACKAGER == "pacman" ]]; then
 		if ! command_exists yay; then
@@ -105,7 +105,6 @@ function back_sym {
 			exit 1
 		fi
 	done
-	echo -e "${GREEN}Done!\nrestart your shell to see the changes.${RC}"
 
 	for config in $(ls ${DOT_HOME_PATH}); do
 		if configExists "$HOME/.${config}"; then
@@ -122,30 +121,50 @@ function back_sym {
 		fi
 	done
 
+	echo -e "${GREEN}Done!\nrestart your shell to see the changes.${RC}"
 	echo -e "\u001b[36;1m Remove backups with 'rm -ir ~/.*.old && rm -ir ~/.config/*.old'. ${RC}"
 }
 
 function install_alacritty {
-	echo -e "${RV} Install Dependens ${RC}"
-	sudo apt install libfontconfig1-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-	echo -e "${RV} Installing Rust ${RC}"
+	## Check for dependencies.
+	DEPEND='libfontconfig1-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev'
+	echo -e "${RV}${YELLOW} Installing dependencies${RC}"
+	sudo "${PACKAGER}" install -yq "${DEPEND}"
 	# Rust,Cargo
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-	source "~/.cargo/env/"
+	if ! command_exists cargo; then
+		echo -e "${RV} Installing Rust ${RC}"
+		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+	else
+		echo -e "${RV} Rust is installed${RC}"
+	fi
+
+	# source "~/.cargo/env/"
 	# Alacritty
-	echo -e "${RV} Compiling Alacritty... ${RC}"
-	# git clone https://github.com/alacritty/alacritty.git
-	# cd alacritty
-	# cargo build --release
-	cargo install alacritty
+	if ! command_exists alacritty; then
+		echo -e "${RV} Compiling Alacritty... ${RC}"
+		# git clone https://github.com/alacritty/alacritty.git
+		# cd alacritty
+		# cargo build --release
+		cargo install alacritty
+	else
+		echo -e "${RV} Alacritty is installed${RC}"
+	fi
 }
 
 function install_sheldon {
-
-	echo -e "${RV} Compiling Sheldon...${RC}"
-	cargo install sheldon
-	sheldon lock
-
+	if command_exists cargo; then
+		if ! command_exists sheldon; then
+			echo -e "${RV} Compiling sheldon... ${RC}"
+			cargo install sheldon
+			sheldon lock
+		else
+			echo -e "${RV} Sheldon is installed${RC}"
+		fi
+	else
+		echo -e "${RED}Rust is not installed!${RC}"
+		# install_alacritty
+		# install_sheldon
+	fi
 	# chsh -s $(which zsh)
 }
 
@@ -205,7 +224,7 @@ echo -e "  \u001b[34;1m (2) install sheldon \u001b[0m"
 echo -e "  \u001b[34;1m (3) starship \u001b[0m"
 echo -e "  \u001b[34;1m (4) lazygit \u001b[0m"
 # echo -e "  \u001b[34;1m (t) TERMINAL \u001b[0m"
-echo -e "  \u001b[34;1m (m) \u001b[0m"
+# echo -e "  \u001b[34;1m (m) \u001b[0m"
 
 echo -e "  \u001b[31;1m (*) Anything else to exit \u001b[0m"
 
