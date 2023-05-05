@@ -1,0 +1,52 @@
+env:
+  # available, otherwise `xterm-256color` is used.
+  TERM: xterm-256color
+
+import: 
+  - ~/.config/alacritty/gruvbox_material.yml
+  # - ~/.config/alacritty/gruvbox_dark.yml
+
+  # - ~/.config/alacritty/font1.yml
+  - ~/.config/alacritty/font2.yml
+  # - ~/.config/alacritty/font3.yml
+
+font:
+  size: 12.0
+  ligatures: true
+
+cursor:
+  style:
+    blinking: Never
+
+
+window:
+  padding:
+    x: 3
+    y: 8
+  scrolling:
+  #   # Maximum number of lines in the scrollback buffer.
+  #   # Specifying '0' will disable scrolling.
+  history: 10000
+  #   # Number of lines the viewport will move for every line scrolled when
+  #   # scrollback is enabled (history > 0).
+  #   multiplier: 10
+
+# Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
+  opacity: 0.9
+  # # If `true`, bold text is drawn using the bright color variants.
+  # draw_bold_text_with_bright_colors: true
+
+  # selection:
+  semantic_escape_chars: ',│`|:"'' ()[]{}<>'
+  save_to_clipboard: true
+  live_config_reload: true
+key_bindings:
+  - { key: V, mods: Control|Shift, action: Paste }
+  - { key: C, mods: Control|Shift, action: Copy }
+  - { key: Key0, mods: Control, action: ResetFontSize }
+  - { key: Equals, mods: Control, action: IncreaseFontSize }
+  - { key: Minus, mods: Control, action: DecreaseFontSize }
+  # - { key: Add, mods: Control, action: IncreaseFontSize }
+  # - { key: Subtract, mods: Control, action: DecreaseFontSize }
+  # - { key: N, mods: Control, action: SpawnNewInstance }

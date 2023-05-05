@@ -52,7 +52,6 @@ checkEnv() {
 		echo -e "${RED}You need to be a member of the sudo group to run me!"
 		exit 1
 	fi
-
 }
 
 installDepend() {
