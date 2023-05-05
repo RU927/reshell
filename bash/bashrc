@@ -68,7 +68,7 @@ export GITPATH
 DOTHOME=$GITHOME/reinst
 export DOTHOME
 
-BASHHOME=$GITHOME/shells
+BASHHOME=$GITHOME/shells/bash
 export BASHHOME
 
 BINHOME=$BASHHOME/bin
