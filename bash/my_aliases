@@ -186,9 +186,9 @@ fi
 # -------------------------------------------------------------------------- }}}
 # {{{ Tmux setup.
 
-if fileExists /usr/bin/tmux; then
-	alias tmux='tmux -2'
-fi
+# if fileExists /usr/bin/tmux; then
+# alias tmux='tmux -2'
+# fi
 
 # -------------------------------------------------------------------------- }}}
 # {{{ Use bat and exa when they are installed.

@@ -12,7 +12,7 @@ rbac_auth() {
         fi
     fi
 }
-rbac_auth
+# rbac_auth
 
 # Basic zsh config.
 umask 077
@@ -469,10 +469,10 @@ bindkey "^A" _open_new_terminal_here
 alias cp='cp -iv --reflink=auto'
 alias rcp='rsync -v --progress'
 alias rmv='rsync -v --progress --remove-source-files'
-alias mv='mv -iv'
-alias rm='rm -iv'
+# alias mv='mv -iv'
+# alias rm='rm -iv'
 alias rmdir='rmdir -v'
-alias ln='ln -v'
+# alias ln='ln -v'
 alias chmod="chmod -c"
 alias chown="chown -c"
 alias mkdir="mkdir -v"
@@ -554,14 +554,14 @@ done
 
 # Source the Lazyman shell initialization for aliases and nvims selector
 # shellcheck source=.config/nvim-Lazyman/.lazymanrc
-[ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
+# [ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
 # Source the Lazyman .nvimsbind for nvims key binding
 # shellcheck source=.config/nvim-Lazyman/.nvimsbind
-[ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+# [ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
 
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
+# if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+#   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# fi
 if command -v zoxide > /dev/null; then
   eval "$(zoxide init zsh)"
 fi
