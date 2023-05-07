@@ -33,7 +33,7 @@ window:
 
 # Allow terminal applications to change Alacritty's window title.
   dynamic_title: true
-  opacity: 0.9
+  opacity: 1.0
   # # If `true`, bold text is drawn using the bright color variants.
   # draw_bold_text_with_bright_colors: true
 
@@ -50,3 +50,24 @@ key_bindings:
   # - { key: Add, mods: Control, action: IncreaseFontSize }
   # - { key: Subtract, mods: Control, action: DecreaseFontSize }
   # - { key: N, mods: Control, action: SpawnNewInstance }
+  # remove the line below!
+  - { key: W, mods: Command, action: Quit }
+
+# shell:
+#   program: /usr/bin/tmux
+#   args:
+#     - new-session
+#     - -A
+#     - -D
+#     - -s
+#     - main
+
+# shell:
+#   program: /usr/bin/tmux
+# startup_mode: Fullscreen
+
+shell:
+  program: /usr/bin/zsh
+  args:
+    - --login
+
