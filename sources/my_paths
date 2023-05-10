@@ -23,7 +23,14 @@ prependToPath "$HOME"/.local/share/nvim/mason/bin
 
 # prependToPath "$HOME"/.local/share/bob/nvim-bin
 
-prependToPath "$BINHOME"
+# prependToPath "$BINHOME"
+
+# for bindir in $BINHOME; do
+# 	# if [ -d "$bindir" ]; then
+# 	prependToPath "$bindir"
+# 	# fi
+# done
+
 # appendToPath "/home/linuxbrew/.linuxbrew/bin"
 # appendToPath "/home/linuxbrew/.linuxbrew/sbin"
 # -------------------------------------------------------------------------- }}}
