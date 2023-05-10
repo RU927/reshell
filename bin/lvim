@@ -7,4 +7,5 @@ export LUNARVIM_CACHE_DIR="${HOME}/.cache/${NVIM_APPNAME}"
 
 export LUNARVIM_BASE_DIR="${HOME}/.local/share/lunarvim/${NVIM_APPNAME}"
 
-exec -a "$NVIM_APPNAME" nvim -u "$LUNARVIM_BASE_DIR/init.lua" "$@"
+# exec -a "$NVIM_APPNAME" nvim -u "$LUNARVIM_BASE_DIR/init.lua" "$@"
+exec -a "$NVIM_APPNAME" sh -c "nvim -u \"$LUNARVIM_BASE_DIR/init.lua\" \"\$@\"" -- "$@"
