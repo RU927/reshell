@@ -24,11 +24,12 @@ prependToPath "$HOME"/.local/share/nvim/mason/bin
 # prependToPath "$HOME"/.local/share/bob/nvim-bin
 
 # prependToPath "$BINHOME"
+export PATH="${PATH}:$BINHOME"
 
 # for bindir in $BINHOME; do
-# 	# if [ -d "$bindir" ]; then
+# 	if [ -d "$bindir" ]; then
 # 	prependToPath "$bindir"
-# 	# fi
+# 	fi
 # done
 
 # appendToPath "/home/linuxbrew/.linuxbrew/bin"
