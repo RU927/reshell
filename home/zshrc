@@ -353,6 +353,10 @@ setopt pushd_ignore_dups
 ## Это Отменяет +/- операторы.
 setopt pushd_minus
 
+bindkey -s "q\t" "cd -\t"
+
+
+
 # Игнорировать записи с префиксом '#'.
 setopt interactivecomments
 # Игнорируйте дубликаты в истории.
