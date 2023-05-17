@@ -498,3 +498,5 @@ bind-key -n M-Tab last-window
 
 bind -r m resize-pane -Z
 
+bind-key -n 'C-\' new-window -n bookmarks -c $HOME \; \
+    send-keys 'fzf-surfraw && tmux kill-window' 'Enter'

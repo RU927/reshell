@@ -70,7 +70,7 @@ checkEnv
 
 install_depend() {
 	## Check for dependencies.
-	DEPENDENCIES='autojump bash bash-completion zsh'
+	DEPENDENCIES='autojump bash bash-completion zsh surfraw surfraw-extra newsboat'
 	echo -e "${YELLOW}Installing dependencies...${RC}"
 	if [[ $PACKAGER == "pacman" ]]; then
 		if ! command_exists yay; then
