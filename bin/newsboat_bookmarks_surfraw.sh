@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #             _   _     _      _
 #  __ _  ___ | |_| |__ | | ___| |_ _   _
 # / _` |/ _ \| __| '_ \| |/ _ \ __| | | |
@@ -24,4 +24,4 @@
 url="$1"         # url
 title="$2"       # tags
 description="$3" # nickname (single word only, no spaces)
-echo -e "${description}\t${url}\t;; newsbeuter ${title}" >>~/.config/surfraw/bookmarks
+echo -e "${description}\t${url}\t;; newsboat ${title}" >>~/.config/surfraw/bookmarks
