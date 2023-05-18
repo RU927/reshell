@@ -53,8 +53,6 @@ shopt -s histappend
 PROMPT_COMMAND='history -a'
 
 # Define directory exports that my_functions use.
-# BBHOME=$HOME/bb
-# export BBHOME
 
 CFGHOME=$HOME/.config
 export CFGHOME
@@ -68,10 +66,18 @@ export GITPATH
 DOTHOME=$GITHOME/reinst
 export DOTHOME
 
-BASHHOME=$GITHOME/shells/bash
-export BASHHOME
+SHELLHOME=$GITHOME/shells
+export SHELLHOME
 
-BINHOME=$BASHHOME/bin
+SHELLSOURCE=$SHELLHOME/sources
+export SHELLSOURCE
+
+BINHOME=$SHELLHOME/bin
+
+if [ -d $DOTHOME/bin ]; then
+	BINHOME=$DOTHOME/bin:$BINHOME
+fi
+
 export BINHOME
 
 # SSHHOME=$GITHOME/ssh
@@ -85,7 +91,7 @@ export BINHOME
 my_array=("functions" "exports" "aliases" "paths" "completions" "prompt")
 
 for m in "${my_array[@]}"; do
-	[[ -f "$BASHHOME/my_$m" ]] && source "$BASHHOME/my_$m"
+	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
 
 # Load my keys.

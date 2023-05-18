@@ -635,7 +635,7 @@ set_venv() {
 
 pyVenv() {
 	if [ $# -eq 0 ]; then # Для работы скрипта необходим входной параметр.
-		echo "Вызовите сценарий с номером версии: x.y.x "
+		echo "Вызовите сценарий с номером версии: 3.x.y "
 	fi
 
 	PyVenvDir=$(pwd)
@@ -643,31 +643,31 @@ pyVenv() {
 	PyBinDir=$PyVersionDir/bin
 	PySrcDir=$PyVersionDir
 	PyVersion=python"${1%.*}"
-	PyVenvName=venv"$1" #ошибка,если не venv в 3.6.9, в 3.5.7, 3.9.1 - норм
+	PyVenvName=venv"$1" #ошибка,если не venv в 3.6.9; в 3.5.7, 3.9.1 - норм
 
 	if [[ ! -d $PyVersionDir ]]; then
-		mkdir -p $PyVersionDir
+		mkdir -p "$PyVersionDir"
 	fi
 
 	if [[ ! -d $PySrcDir ]]; then
-		mkdir -p $PySrcDir
+		mkdir -p "$PySrcDir"
 	fi
 	if [[ ! -d $PyBinDir ]]; then
-		cd $PySrcDir
+		cd "$PySrcDir"
 		wget http://www.python.org/ftp/python/"$1"/Python-"$1".tgz
 		tar -zxvf Python-"$1".tgz
 		rm -rf Python-"$1".tgz
 		cd Python-"$1"
-		./configure --prefix=$PyVersionDir
+		./configure --prefix="$PyVersionDir"
 		make
 		make install
-		cd $PyVenvDir
+		cd "$PyVenvDir"
 	fi
 	# if [[ ! -d $PyVenvName ]]; then
-	$PyBinDir/$PyVersion -m venv $PyVenvName
+	"$PyBinDir"/"$PyVersion" -m venv "$PyVenvName"
 	# fi
 
-	source $PyVenvName/bin/activate
+	source "$PyVenvName"/bin/activate
 }
 
 fzf-surfraw() { surfraw "$(cat ~/.config/surfraw/bookmarks | sed '/^$/d' | sort -n | fzf -e)"; }
