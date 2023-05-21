@@ -175,7 +175,7 @@ alias gpg-retrieve="gpg --keyserver-options auto-key-retrieve --receive-keys"
 
 alias ssn="sudo shutdown now"
 alias sdn='sudo shutdown now'
-alias sr="sudo reboot"
+# alias sr="sudo reboot"
 alias rbn='sudo reboot now'
 alias i3l="i3lock -i $HOME/Downloads/git_ch.png"
 
@@ -528,3 +528,6 @@ alias kssh="kitty +kitten ssh"
 # alias nvim-lazyman="NVIM_APPNAME=nvim-Lazyman nvim"
 
 #alias v="NVIM_APPNAME=nvim nvim"
+
+alias sr='sr -browser=$BROWSERCLI'
+alias surfraw='surfraw -browser=$BROWSER'
