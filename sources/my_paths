@@ -23,12 +23,12 @@ prependToPath "$HOME"/.local/share/nvim/mason/bin
 
 # prependToPath "$HOME"/.local/share/bob/nvim-bin
 
-# prependToPath "$BINHOME"
-export PATH="${PATH}:$BINHOME"
+appendToPath "$DOTBIN"
+appendToPath "$SHELLBIN"
 
-# for bindir in $BINHOME; do
+# for bindir in $(ls ${SHELLBIN}); do
 # 	if [ -d "$bindir" ]; then
-# 	prependToPath "$bindir"
+# 		appendToPath "$SHELLBIN/$bindir"
 # 	fi
 # done
 

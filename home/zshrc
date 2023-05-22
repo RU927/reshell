@@ -40,19 +40,19 @@ export GITPATH
 DOTHOME=$GITHOME/reinst
 export DOTHOME
 
+if [ -d $DOTHOME/bin ] ; then
+    DOTBIN=$DOTHOME/bin
+    export DOTBIN
+fi
+
 SHELLHOME=$GITHOME/shells
 export SHELLHOME
 
 SHELLSOURCE=$SHELLHOME/sources
 export SHELLSOURCE
 
-BINHOME=$SHELLHOME/bin
-
-if [ -d $DOTHOME/bin ] ; then
-    BINHOME=$DOTHOME/bin:$BINHOME
-fi
-
-export BINHOME
+SHELLBIN=$SHELLHOME/bin
+export SHELLBIN
 
 # SSHHOME=$GITHOME/ssh
 # export SSHHOME
@@ -574,6 +574,3 @@ done
 # if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
 #   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # fi
-if command -v zoxide > /dev/null; then
-  eval "$(zoxide init zsh)"
-fi
