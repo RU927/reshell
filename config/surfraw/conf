@@ -32,12 +32,12 @@ defyn   SURFRAW_graphical		yes
 
 # name/path of text browser executable
 # e.g links, lynx, w3m
-def   SURFRAW_text_browser	www-browser
+def   SURFRAW_text_browser	"${BROWSERCLI}"
 
 # name/path of browser executable
 # e.g mozilla, netscape etc. Default to $BROWSER if no listed ones found
 # def   SURFRAW_graphical_browser	"${BROWSER:-sensible-browser}"
-SURFRAW_graphical_browser=/usr/bin/luakit
+def SURFRAW_graphical_browser "${BROWSERMIN}"
 
 # text browser arguments, or "none"
 def   SURFRAW_text_browser_args	none

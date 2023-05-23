@@ -530,4 +530,4 @@ alias kssh="kitty +kitten ssh"
 #alias v="NVIM_APPNAME=nvim nvim"
 
 alias sr='sr -browser=$BROWSERCLI'
-alias surfraw='surfraw -browser=$BROWSER'
+alias surfraw='surfraw -browser=$BROWSERMIN'
