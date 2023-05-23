@@ -135,7 +135,7 @@ bookmark-cmd "newsboat_bookmarks_surfraw.sh"
 #
 # Default value: %BROWSER, otherwise lynx
 #
-browser "%BROWSERMIN %u"
+browser "$BROWSERMIN %u"
 
 ####  cache-file
 #
@@ -753,6 +753,7 @@ browser "%BROWSERMIN %u"
 # Default value: n/a
 #
 # macro k open; reload; quit
+macro y set browser "mpv %u" ; open-in-browser ; set browser "$BROWSERMIN %u"
 
 ####  mark-as-read-on-hover
 #
