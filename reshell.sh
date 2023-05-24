@@ -99,6 +99,7 @@ function back_sym {
 				echo -e "${RED}Can't move the old config!${RC}"
 				exit 1
 			fi
+			echo -e "${WHITE} Remove backups with 'rm -ir ~/.*.old && rm -ir ~/.config/*.old' ${RC}"
 		fi
 		echo -e "${GREEN}Linking ${DOT_CFG_PATH}/${config} to ${USR_CFG_PATH}/${config}${RC}"
 		if ! ln -snf "${DOT_CFG_PATH}/${config}" "${USR_CFG_PATH}/${config}"; then
@@ -114,6 +115,7 @@ function back_sym {
 				echo -e "${RED}Can't move the old config!${RC}"
 				exit 1
 			fi
+			echo -e "${WHITE} Remove backups with 'rm -ir ~/.*.old && rm -ir ~/.config/*.old' ${RC}"
 		fi
 		echo -e "${GREEN}Linking ${DOT_HOME_PATH}/${config} to ${HOME}/.${config}${RC}"
 		if ! ln -snf "${DOT_HOME_PATH}/${config}" "${HOME}/.${config}"; then
@@ -123,7 +125,6 @@ function back_sym {
 	done
 
 	echo -e "${GREEN}Done!\nrestart your shell to see the changes.${RC}"
-	echo -e "\u001b[36;1m Remove backups with 'rm -ir ~/.*.old && rm -ir ~/.config/*.old'. ${RC}"
 }
 
 function install_alacritty {
@@ -196,12 +197,10 @@ function install_lazygit {
 function all {
 	echo -e "\u001b[7m Setting up Dotfiles... \u001b[0m"
 	install_depend
-	install_alacritty
-	install_sheldon
-	install_starship
 	back_sym
 	install_alacritty
 	install_sheldon
+	install_starship
 	install_lazygit
 	install_file_managers
 	install_fonts
