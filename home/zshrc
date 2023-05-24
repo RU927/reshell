@@ -37,22 +37,30 @@ export GITHOME
 GITPATH=$GITHOME
 export GITPATH
 
-DOTHOME=$GITHOME/reinst
-export DOTHOME
+DOT_INST=$GITHOME/re_inst
+export DOT_INST
 
-if [ -d $DOTHOME/bin ] ; then
-    DOTBIN=$DOTHOME/bin
-    export DOTBIN
+if [ -d $DOT_INST/bin ] ; then
+    BIN_INST=$DOT_INST/bin
+    export BIN_INST
 fi
 
-SHELLHOME=$GITHOME/shells
+DOT_SHELL=$GITHOME/re_shell
 export SHELLHOME
 
-SHELLSOURCE=$SHELLHOME/sources
+SHELLSOURCE=$DOT_SHELL/sources
 export SHELLSOURCE
 
-SHELLBIN=$SHELLHOME/bin
-export SHELLBIN
+BIN_SHELL=$DOT_SHELL/bin
+export BIN_SHELL
+
+DOT_STARTER=$GITHOME/re_starter
+export DOT_STARTER
+
+if [ -d $DOT_STARTER/bin ]; then
+  BIN_STARTER=$DOT_STARTER/bin
+  export BIN_STARTER
+fi
 
 # SSHHOME=$GITHOME/ssh
 # export SSHHOME

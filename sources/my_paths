@@ -23,8 +23,9 @@ prependToPath "$HOME"/.local/share/nvim/mason/bin
 
 # prependToPath "$HOME"/.local/share/bob/nvim-bin
 
-appendToPath "$DOTBIN"
-appendToPath "$SHELLBIN"
+appendToPath "$BIN_INST"
+appendToPath "$BIN_SHELL"
+appendToPath "$BIN_STARTER"
 
 # for bindir in $(ls ${SHELLBIN}); do
 # 	if [ -d "$bindir" ]; then

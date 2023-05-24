@@ -239,10 +239,10 @@ alias xz='$EDITOR -c "let g:tty='\''$(tty)'\''"'
 # -------------------------------------------------------------------------- }}}
 # {{{ Aliases to folders I visit frequently.
 
-alias .a='cd $SHELLHOME'
-alias .b='cd $BINHOME'
+alias .a='cd $DOT_SHELL'
+alias .b='cd $BIN_HOME'
 alias .c='cd $CFGHOME'
-alias .d='cd $DOTHOME'
+alias .d='cd $DOT_INST'
 alias .g='cd $GITHOME'
 alias Dc='cd $HOME/Documents'
 alias Dd='cd $HOME/Downloads'
@@ -266,7 +266,7 @@ alias cra='cd $CFGHOME/ranger'
 # {{{ File I edit frequently.  These aliases mirror keybinds used in Vim.
 
 alias ,et='$EDITOR $SHELLHOME/config/tmux/tmux.conf.local'
-alias ,ev='$EDITOR $DOTHOME/home/vimrc'
+alias ,ev='$EDITOR $DOT_INST/home/vimrc'
 
 alias ,ma='$EDITOR $SHELLSOURCE/my_aliases'
 alias ,mb='$EDITOR $SHELLSOURCE/bashrc'
@@ -276,7 +276,7 @@ alias ,mf='$EDITOR $SHELLSOURCE/my_functions'
 alias ,mp='$EDITOR $SHELLSOURCE/my_paths'
 alias ,mt='$EDITOR $SHELLSOURCE/my_prompt'
 
-alias ,mz='$EDITOR $SHELLHOME/home/zshrc'
+alias ,mz='$EDITOR $DOT_SHELL/home/zshrc'
 
 # alias ,xb='$EDITOR $BASHHOME/bspwmrc'
 # alias ,xs='$EDITOR $BASHHOME/sxhkdrc'
