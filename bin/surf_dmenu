@@ -5,6 +5,7 @@ brave="$XDG_CONFIG_HOME/BraveSoftware/Brave-Browser/Default/Bookmarks"
 surfraw="$XDG_CONFIG_HOME/surfraw/bookmarks"
 firefox="$HOME/.mozilla/firefox/path/to/places.sqlite"
 librewolf="$HOME/.librewolf/path/to/places.sqlite"
+googlechrome="$HOME/.config/google-chrome/Default/Bookmarks"
 # Browser specific parsers
 
 # Surfraw
@@ -24,6 +25,7 @@ moz() {
 }
 
 sr $({
+	chrome $googlechrome &
 	chrome $brave &
 	surfr $surfraw &
 	moz $firefox &
