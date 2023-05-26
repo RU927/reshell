@@ -46,7 +46,7 @@ if [ -d $DOT_INST/bin ] ; then
 fi
 
 DOT_SHELL=$GITHOME/re_shell
-export SHELLHOME
+export DOT_SHELL
 
 SHELLSOURCE=$DOT_SHELL/sources
 export SHELLSOURCE
@@ -54,12 +54,12 @@ export SHELLSOURCE
 BIN_SHELL=$DOT_SHELL/bin
 export BIN_SHELL
 
-DOT_STARTER=$GITHOME/re_starter
-export DOT_STARTER
+DOT_RUN=$GITHOME/re_run
+export DOT_RUN
 
-if [ -d $DOT_STARTER/bin ]; then
-  BIN_STARTER=$DOT_STARTER/bin
-  export BIN_STARTER
+if [ -d $DOT_RUN/bin ]; then
+  BIN_RUN=$DOT_RUN/bin
+  export BIN_RUN
 fi
 
 # SSHHOME=$GITHOME/ssh
