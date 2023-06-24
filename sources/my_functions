@@ -512,11 +512,15 @@ function whatsmyip() {
 
 	# Internal IP Lookup
 	echo -n "Internal IP: "
-	/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
+	# ifconfig enp2s0 \
+	ifconfig wlx60e32716669c |
+		# grep "inet" | awk -F: '{print $2}' | awk '{print $1}'
+		grep "inet " | awk -F: '{print $1}' | awk '{print $2}'
 
 	# External IP Lookup
 	echo -n "External IP: "
-	wget http://smart-ip.net/myip -O - -q
+	# wget http://smart-ip.net/myip -O - -q
+	dig @resolver4.opendns.com myip.opendns.com +short
 }
 
 # View Apache logs
