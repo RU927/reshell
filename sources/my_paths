@@ -21,6 +21,9 @@ prependToPath "$HOME"/.luarocks/bin
 
 prependToPath "$HOME"/.local/share/nvim/mason/bin
 
+prependToPath "$HOME"/.config/guix/current/bin
+prependToPath "$HOME"/.guix-profile/bin
+
 # prependToPath "$HOME"/.local/share/bob/nvim-bin
 
 appendToPath "/usr/local/go/bin"
