@@ -506,6 +506,13 @@ netinfo() {
 
 # IP address lookup
 alias whatismyip="whatsmyip"
+
+if [ "$HOST" = vaio ]; then
+	radio_adapter=wlp7s0
+elif [ "$HOST" = pcRU ]; then
+	radio_adapter=wlx60e32716669c
+fi
+
 function whatsmyip() {
 	# Dumps a list of all IP addresses for every device
 	# /sbin/ifconfig |grep -B1 "inet addr" |awk '{ if ( $1 == "inet" ) { print $2 } else if ( $2 == "Link" ) { printf "%s:" ,$1 } }' |awk -F: '{ print $1 ": " $3 }';
@@ -513,7 +520,7 @@ function whatsmyip() {
 	# Internal IP Lookup
 	echo -n "Internal IP: "
 	# ifconfig enp2s0 \
-	ifconfig wlx60e32716669c |
+	ifconfig "$radio_adapter" |
 		# grep "inet" | awk -F: '{print $2}' | awk '{print $1}'
 		grep "inet " | awk -F: '{print $1}' | awk '{print $2}'
 
