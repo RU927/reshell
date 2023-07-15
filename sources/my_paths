@@ -30,9 +30,15 @@ appendToPath "/usr/local/go/bin"
 
 appendToPath "$BIN_INST"
 # appendToPath "$BIN_SHELL"
-appendToPath "$BIN_RUN"
+# appendToPath "$BIN_RUN"
 
 for d in $(command du "$BIN_SHELL" | cut -f2); do
+	if [ -d "$d" ]; then
+		appendToPath "$d"
+	fi
+done
+
+for d in $(command du "$BIN_RUN" | cut -f2); do
 	if [ -d "$d" ]; then
 		appendToPath "$d"
 	fi
