@@ -479,7 +479,7 @@ alias rebootsafe='sudo shutdown -r now'
 alias rebootforce='sudo shutdown -r -n now'
 
 # Alias's to show disk space and space used in a folder
-alias diskspace="du -S | sort -n -r |more"
+alias diskspace="du -S | sort -n -r | more"
 alias folders='du -h --max-depth=1'
 alias folderssort='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
 alias tree='tree -CAhF --dirsfirst'
@@ -531,3 +531,26 @@ alias kssh="kitty +kitten ssh"
 
 alias sr='sr -browser=$BROWSERCLI'
 alias surfraw='surfraw -browser=$BROWSERMIN'
+
+# Aliases in zshrc
+alias cp='cp -iv --reflink=auto'
+alias rcp='rsync -v --progress'
+alias rmv='rsync -v --progress --remove-source-files'
+# alias mv='mv -iv'
+# alias rm='rm -iv'
+alias rmdir='rmdir -v'
+# alias ln='ln -v'
+alias chmod="chmod -c"
+alias chown="chown -c"
+alias mkdir="mkdir -v"
+alias grep='grep --colour=auto'
+alias egrep='egrep --colour=auto'
+alias ls='ls --color=auto --human-readable --group-directories-first --classify'
+alias ll='ls --color=auto --human-readable --group-directories-first --classify -l'
+alias lla='ls --color=auto --human-readable --group-directories-first --classify -la'
+
+if command -v colordiff >/dev/null 2>&1; then
+	alias diff="colordiff -Nuar"
+else
+	alias diff="diff -Nuar"
+fi

@@ -15,7 +15,7 @@ export R_HOME=/usr/lib/R
 
 export LANG=ru_RU.UTF-8
 
-export LD_LIBRARY_PATH=$HOME/anaconda3/envs/JupyterSystemEnv/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/miniconda3/envs/JupyterSystemEnv/lib
 export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
 
 # {{{ History and path
@@ -71,8 +71,8 @@ else
 fi
 
 export FILE=ranger
-export TERM=xterm-256color
-# export TERM=alacritty
+# export TERM=xterm-256color
+export TERM=alacritty
 export WM=awesome
 
 # -------------------------------------------------------------------------- }}}
