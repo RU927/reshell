@@ -81,16 +81,6 @@ if [ -f "$HOME/.config/sheldon/plugins.toml" ]; then
   fi
 fi
 
-# Include user-specified configs.
-if [ ! -d "${ZSHDDIR}" ]; then
-    mkdir -p "${ZSHDDIR}" && echo "# Put your user-specified config here." > "${ZSHDDIR}/example.zsh"
-fi
-
-for zshd in $(ls -A ${HOME}/.config/zsh.d/^*.(z)sh$); do
-    . "${zshd}"
-done
-
-
 # Le features!
 # extended globbing, awesome!
 setopt extendedGlob
@@ -104,7 +94,6 @@ autoload -U zargs
 # Turn on command substitution in the prompt (and parameter expansion and arithmetic expansion).
 setopt promptsubst
 
-
 # Prevent insert key from changing input mode.
 # (switch to Emacs mode)
 bindkey -e
@@ -114,6 +103,14 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
+# Include user-specified configs.
+if [ ! -d "${ZSHDDIR}" ]; then
+    mkdir -p "${ZSHDDIR}" && echo "# Put your user-specified config here." > "${ZSHDDIR}/example.zsh"
+fi
+
+for zshd in $(ls -A ${HOME}/.config/zsh.d/^*.(z)sh$); do
+    . "${zshd}"
+done
 
 # Completion.
 autoload -Uz compinit
@@ -155,7 +152,6 @@ setopt pushd_ignore_dups
 setopt pushd_minus
 
 bindkey -s "q\t" "cd -\t"
-
 
 
 # Игнорировать записи с префиксом '#'.
