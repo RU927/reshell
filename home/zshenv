@@ -8,3 +8,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 #export PATH="/home/linuxbrew/.linuxbrew/bin"
 
 # awesome-client "local naughty=require('naughty'); require('awful').spawn.easy_async('env', function(out) naughty.notify({title="ENV", text=out})end)"
+
+# export XDG_CURRENT_DESKTOP="KDE"
+# export XDG_CONFIG_HOME=$HOME/.config
+# export XDG_CURRENT_DESKTOP="KDE"
+CONDA_PREFIX=/home/ru/miniconda3
