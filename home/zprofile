@@ -3,3 +3,4 @@ if systemctl -q is-active graphical.target \
   startx;
 fi;
 # export XDG_CURRENT_DESKTOP="KDE"
+export TERMINAL="alacritty"

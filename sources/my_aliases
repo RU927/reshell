@@ -529,8 +529,8 @@ alias kssh="kitty +kitten ssh"
 
 #alias v="NVIM_APPNAME=nvim nvim"
 
-alias sr='sr -browser=$BROWSERCLI'
-alias surfraw='surfraw -browser=$BROWSERMIN'
+alias sr='surfraw -t'
+alias surfraw='surfraw -g'
 
 # Aliases in zshrc
 alias cp='cp -iv --reflink=auto'

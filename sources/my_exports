@@ -70,10 +70,10 @@ else
 	export BROWSERMIN=""
 fi
 
-export FILE=ranger
+# export FILE=ranger
 # export TERM=xterm-256color
-export TERM=alacritty
-export WM=awesome
+# export TERMINAL=alacritty
+# export WM=awesome
 
 # -------------------------------------------------------------------------- }}}
 # {{{ autodoc location.
