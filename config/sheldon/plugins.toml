@@ -23,6 +23,9 @@ github = 'zsh-users/zsh-syntax-highlighting.git'
 [plugins.zsh-history-substring-search]
 github = 'zsh-users/zsh-history-substring-search'
 
+[plugins.zsh-vi-mode]
+github = 'jeffreytse/zsh-vi-mode'
+
 # For example:
 #
 # [plugins.base16]
