@@ -12,4 +12,4 @@ export PATH="$HOME/.cargo/bin:$PATH"
 # export XDG_CURRENT_DESKTOP="KDE"
 # export XDG_CONFIG_HOME=$HOME/.config
 # export XDG_CURRENT_DESKTOP="KDE"
-CONDA_PREFIX=/home/ru/miniconda3
+
