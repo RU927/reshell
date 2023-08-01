@@ -831,3 +831,15 @@ view_csv() {
 }
 alias csv="view_csv"
 
+
+
+
+yt() {
+  if programExists yt-dlp; then
+    yt-dlp -o - $1 | mpv -
+  elif programExists youtube-dl; then
+    youtube-dl -o - $1 | mpv -
+  else
+    echo "no-no"
+  fi
+}
