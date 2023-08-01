@@ -13,7 +13,7 @@ if programExists rbenv; then
 fi
 
 # prependToPath only prepends to the path when the directory exists.
-prependToPath "$HOME"/bin
+# prependToPath "$HOME"/bin
 # prependToPath "$HOME"/.bin
 # prependToPath "$HOME"/.local/bin
 # prependToPath "$HOME"/.npm/bin
@@ -43,7 +43,14 @@ for d in $(command du "$BIN_RUN" | cut -f2); do
 		appendToPath "$d"
 	fi
 done
-
+# Homebrew
+case "${OSTYPE}" in
+linux*) brew_path="/home/linuxbrew/.linuxbrew" ;;
+darwin*) brew_path="/opt/homebrew" ;;
+esac
+if [[ -f "${brew_path}/bin/brew" ]]; then
+	eval "$("${brew_path}"/bin/brew shellenv)"
+fi
 # appendToPath "/home/linuxbrew/.linuxbrew/bin"
 # appendToPath "/home/linuxbrew/.linuxbrew/sbin"
 # -------------------------------------------------------------------------- }}}
