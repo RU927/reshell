@@ -248,7 +248,12 @@ for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
 
-if [-f ~/key ]; then source ~/keys; else echo "api-key file not found"
+
+if [ -f "$HOME"/keys ]; then 
+  source "$HOME"/keys 
+else
+  echo "api-key file not found"
+fi
 
 
 # Source the Lazyman shell initialization for aliases and nvims selector
