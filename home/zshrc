@@ -248,9 +248,12 @@ for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
 
+if [-f ~/key ]; then source ~/keys; else echo "api-key file not found"
+
+
 # Source the Lazyman shell initialization for aliases and nvims selector
 # shellcheck source=.config/nvim-Lazyman/.lazymanrc
-[ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
+# [ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
 # Source the Lazyman .nvimsbind for nvims key binding
 # shellcheck source=.config/nvim-Lazyman/.nvimsbind
 [ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
@@ -259,6 +262,8 @@ done
 #   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # fi
 eval "$(atuin init zsh)"
+
+
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
