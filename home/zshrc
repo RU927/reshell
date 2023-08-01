@@ -94,11 +94,11 @@ fi
 #   zvm_bindkey vicmd "^[[B" history-beginning-search-forward
 # }
 
-zvm_vi_yank () {
-	zvm_yank
-	printf %s "${CUTBUFFER}" | xclip -sel c
-	zvm_exit_visual_mode
-}
+# zvm_vi_yank () {
+# 	zvm_yank
+# 	printf %s "${CUTBUFFER}" | xclip -sel c
+# 	zvm_exit_visual_mode
+# }
 
 # Le features!
 # extended globbing, awesome!
@@ -115,8 +115,8 @@ setopt promptsubst
 
 # Prevent insert key from changing input mode.
 # (switch to Emacs mode)
-# bindkey -e
-bindkey -v
+bindkey -e
+# bindkey -v
 
 # Control-x-e to open current line in $EDITOR, awesome when writting functions or editing multiline commands.
 autoload -U edit-command-line
