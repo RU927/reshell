@@ -92,7 +92,7 @@ fi
 
 # {{{ Customize my shell. Array order matters.
 
-my_array=("functions" "exports" "aliases" "paths" "completions" "bash_prompt")
+my_array=("functions" "bash_func" "exports" "aliases" "paths" "completions" "bash_prompt")
 
 for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
