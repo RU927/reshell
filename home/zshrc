@@ -15,12 +15,20 @@ rbac_auth() {
 # rbac_auth
 
 # Basic zsh config.
+
 umask 077
 ZDOTDIR=${ZDOTDIR:-${HOME}}
-ZSHDDIR="${HOME}/.config/zsh.d"
+# ZSHDDIR="${HOME}/.config/zsh"
+ZSHDDIR="${ZDOTDIR}/.zsh"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='128000'
 SAVEHIST='128000'
+
+# for zshd in $(ls -A ${ZSHDDIR}/zsh*); do
+#     . "${zshd}"
+# done
+
+
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
 export TMPDIR="$TMP"
@@ -69,37 +77,6 @@ fi
 # WIKIHOME=$GIT_HOME/wiki
 # export WIKIHOME
 
-# if ! [[ "${PATH}" =~ "^${HOME}/bin" ]]; then
-#     export PATH="${HOME}/bin:${PATH}"
-# fi
-
-#plugins
-if [ -f "$HOME/.config/sheldon/plugins.toml" ]; then
-  # if [ which $sheldon &> /dev/null ]; then      # истина при любом имени
-  if (( $+commands[sheldon] )); then              # только для zsh
-     eval "$(sheldon source)"
-  fi
-fi
-
-# zvm_after_init() {
-#   eval "$(atuin init zsh)"
-# }
-
-# zvm_after_init_commands+=('bindkey -s "q\t" "cd -\t"')
-
-# zvm_before_init() {
-#   zvm_bindkey viins "^[[A" history-beginning-search-backward
-#   zvm_bindkey viins "^[[B" history-beginning-search-forward
-#   zvm_bindkey vicmd "^[[A" history-beginning-search-backward
-#   zvm_bindkey vicmd "^[[B" history-beginning-search-forward
-# }
-
-# zvm_vi_yank () {
-# 	zvm_yank
-# 	printf %s "${CUTBUFFER}" | xclip -sel c
-# 	zvm_exit_visual_mode
-# }
-
 # Le features!
 # extended globbing, awesome!
 setopt extendedGlob
@@ -123,14 +100,6 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
-# Include user-specified configs.
-if [ ! -d "${ZSHDDIR}" ]; then
-    mkdir -p "${ZSHDDIR}" && echo "# Put your user-specified config here." > "${ZSHDDIR}/example.zsh"
-fi
-
-for zshd in $(ls -A ${HOME}/.config/zsh.d/^*.(z)sh$); do
-    . "${zshd}"
-done
 
 # Completion.
 autoload -Uz compinit
@@ -248,6 +217,13 @@ for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
 
+# Test and then source exported variables.
+# my_array=("exports" "options" "aliases" "functions" "zle" "bindings" "compctl" "style" "misc" "paths" "prompt")
+#
+# for m in "${my_array[@]}"; do
+# 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
+# done
+
 
 if [ -f "$HOME"/keys ]; then 
   source "$HOME"/keys 
@@ -256,15 +232,13 @@ else
 fi
 
 
-# Source the Lazyman shell initialization for aliases and nvims selector
-# shellcheck source=.config/nvim-Lazyman/.lazymanrc
-# [ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
-# Source the Lazyman .nvimsbind for nvims key binding
-# shellcheck source=.config/nvim-Lazyman/.nvimsbind
-[ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+#plugins
+if (( $+commands[sheldon] )); then              # только для zsh
+   eval "$(sheldon source)"
+fi
 
-# if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-#   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# fi
-eval "$(atuin init zsh)"
+if (( $+commands[atuin] )); then
+  eval "$(atuin init zsh)"
+fi
+
 
