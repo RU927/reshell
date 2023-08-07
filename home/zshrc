@@ -221,7 +221,7 @@ done
 # my_array=("exports" "options" "aliases" "functions" "zle" "bindings" "compctl" "style" "misc" "paths" "prompt")
 #
 # for m in "${my_array[@]}"; do
-# 	[[ -f "$ZSHDDIR/zsh_$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh_$m in unavailable"
+# 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
 # done
 
 
