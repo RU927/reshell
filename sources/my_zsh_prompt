@@ -96,7 +96,9 @@ fi
 
 case $USER in
     root)
-        PROMPT='%B%F{cyan}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{blue}%1~${git_prompt}%F{blue} %# %b%f%k'
+        PROMPT='%B%F{red}%n%B%F{reset_color}*%B%F{yellow}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{green}%1~${git_prompt}%F{blue} %B%F{red}%# %b%f%k'
+
+        RPROMPT='%B%F{red}%n %B%F{green}%~'
     ;;
 
     *)  

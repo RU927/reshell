@@ -2,18 +2,6 @@
 # Author: Piotr Karbowski <piotr.karbowski@gmail.com>
 # License: beerware.
 
-# Are we running under grsecurity's RBAC?
-rbac_auth() {
-    local auth_to_role='admin'
-    if [ "${USER}" = 'root' ]; then
-        if ! grep -qE '^RBAC:' "/proc/self/status" && command -v gradm > /dev/null 2>&1; then
-            echo -e "\n${BLUE}*${NC} ${GREEN}RBAC${NC} Authorize to '${auth_to_role}' RBAC role."
-            gradm -a "${auth_to_role}" && exec "${SHELL}" "$@"
-        fi
-    fi
-}
-# rbac_auth
-
 # Basic zsh config.
 
 umask 077
@@ -23,10 +11,6 @@ ZSHDDIR="${ZDOTDIR}/.zsh"
 HISTFILE="${ZDOTDIR}/.zsh_history"
 HISTSIZE='128000'
 SAVEHIST='128000'
-
-# for zshd in $(ls -A ${ZSHDDIR}/zsh*); do
-#     . "${zshd}"
-# done
 
 
 export TMP="$HOME/tmp"
@@ -71,9 +55,9 @@ if [ -d $DOT_RUN ]; then
   export BIN_RUN
 fi
 
-# SSHHOME=$GIT_HOME/ssh
-# export SSHHOME
-#
+SSHHOME=$HOME/ssh
+export SSHHOME
+
 # WIKIHOME=$GIT_HOME/wiki
 # export WIKIHOME
 
@@ -110,11 +94,7 @@ zstyle ':completion:*' menu select=2
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion:*:descriptions' format '%U%F{YELLOW}%d%f%u'
-#
-# if command -v terraform >/dev/null 2>&1; then
-#     autoload -U +X bashcompinit && bashcompinit
-#     complete -o nospace -C $(command -v terraform) terraform
-# fi
+
 
 # If running as root and nice >0, renice to 0.
 if [ "$USER" = 'root' ] && [ "$(cut -d ' ' -f 19 /proc/$$/stat)" -gt 0 ]; then

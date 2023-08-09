@@ -554,3 +554,5 @@ if command -v colordiff >/dev/null 2>&1; then
 else
 	alias diff="diff -Nuar"
 fi
+
+alias root="sudo -E -s"
