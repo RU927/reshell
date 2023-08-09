@@ -198,6 +198,11 @@ function all {
 	echo -e "\u001b[7m Done! \u001b[0m"
 }
 
+if [ "$1" = "--backsym" ] || [ "$1" = "-b" ]; then
+	back_sym
+	exit 0
+fi
+
 if [ "$1" = "--all" -o "$1" = "-a" ]; then
 	all
 	exit 0
