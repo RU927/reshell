@@ -70,8 +70,11 @@ checkEnv
 
 install_depend() {
 	## Check for dependencies.
-	DEPENDENCIES='autojump bash bash-completion zsh \
-    surfraw surfraw-extra newsboat locate mlocate'
+	DEPENDENCIES='\
+    # autojump bash bash-completion\
+    zsh \
+    locate mlocate \
+    '
 	echo -e "${YELLOW}Installing dependencies...${RC}"
 	sudo "${PACKAGER}" install -yq "${DEPENDENCIES}"
 }
