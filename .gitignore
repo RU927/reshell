@@ -1,3 +1,5 @@
 config/tmux/plugins
 config/atuin/.nvimlog
 config/vifm/vifminfo.json
+config/ranger/__pycache__
+config/ranger/plugins/__pycache__
