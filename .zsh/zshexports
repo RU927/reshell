@@ -304,7 +304,7 @@ LS_COLORS=$LS_COLORS:'di=32'          # Directory         = Bold, Yellow
 LS_COLORS=$LS_COLORS:'ln=01;36'       # Symbolic link     = Bold, Cyan
 LS_COLORS=$LS_COLORS:'pi=33'          # Named pipe        = Yellow
 LS_COLORS=$LS_COLORS:'so=01;35'       # Socket            = Bold, Magenta
-eS_COLORS=$LS_COLORS:'do=01;35'       # DO                = Bold, Magenta
+LS_COLORS=$LS_COLORS:'do=01;35'       # DO                = Bold, Magenta
 LS_COLORS=$LS_COLORS:'bd=01;37'       # Block device      = Bold, Grey
 LS_COLORS=$LS_COLORS:'cd=01;37'       # Character device  = Bold, Grey
 LS_COLORS=$LS_COLORS:'ex=35'          # Executable file   = Light, Blue

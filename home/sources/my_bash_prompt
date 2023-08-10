@@ -54,12 +54,12 @@ prompt_git() {
 			git update-index --really-refresh -q &>/dev/null
 
 			# Check for uncommitted changes in the index.
-			if ! $(git diff --quiet --ignore-submodules --cached); then
+			if [ ! "$(git diff --quiet --ignore-submodules --cached)" ]; then
 				s+='+'
 			fi
 
 			# Check for unstaged changes.
-			if ! $(git diff-files --quiet --ignore-submodules --); then
+			if [ ! "$(git diff-files --quiet --ignore-submodules --)" ]; then
 				s+='!'
 			fi
 
@@ -69,7 +69,7 @@ prompt_git() {
 			fi
 
 			# Check for stashed files.
-			if $(git rev-parse --verify refs/stash &>/dev/null); then
+			if [ "$(git rev-parse --verify refs/stash &>/dev/null)" ]; then
 				s+='$'
 			fi
 
@@ -157,14 +157,17 @@ fi
 PS1="\[\033]0;\w\007\]"
 PS1+="\[${bold}\]\n"      # newline
 PS1+="\[${userStyle}\]\u" # username
-PS1+="\[${white}\] at "
-PS1+="\[${hostStyle}\]\h"                        # host
-PS1+="\[${white}\] in ${green}\w"                # working directory
+# PS1+="\[${white}\] at "
+PS1+="\[${white}\]*"
+PS1+="\[${hostStyle}\]\h" # host
+# PS1+="\[${white}\] in ${green}\w"                # working directory
+PS1+="\[ ${green}\w"                             # working directory
 PS1+="\$(prompt_git \"${white} git:${violet}\")" # Git repository details
 PS1+="\$(prompt_node \"${white} node:${cyan}\")" # Node.js version
 PS1+="\$(prompt_k8s \"${white} k8s:${purple}\")" # Kubernetes config
 PS1+="\n"
-PS1+="\[${white}\]λ \[${reset}\]" # `$` (and reset color)
+# PS1+="\[${white}\]λ \[${reset}\]" # `$` (and reset color)
+PS1+="\[${white}\]> \[${reset}\]" # `$` (and reset color)
 export PS1
 
 PS2="\[${yellow}\]→ \[${reset}\]"

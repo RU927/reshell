@@ -42,7 +42,7 @@ fi
 
 DOT_SHELL=$GIT_HOME/re_shell
 BIN_SHELL=$DOT_SHELL/bin
-SHELLSOURCE=$DOT_SHELL/sources
+SHELLSOURCE=$DOT_SHELL/home/sources
 export DOT_SHELL
 export BIN_SHELL
 export SHELLSOURCE
@@ -191,7 +191,7 @@ bindkey "^S" history-incremental-pattern-search-forward
 if [ -f ~/.alert ]; then echo '>>> Check ~/.alert'; fi
 
 
-my_array=("functions" "exports" "aliases" "zsh_prompt" "paths")
+my_array=("functions" "zsh_functions" "exports" "aliases" "zsh_prompt" "paths")
 
 for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"

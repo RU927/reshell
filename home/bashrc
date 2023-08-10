@@ -65,21 +65,21 @@ export GIT_HOME
 
 DOT_INST=$GIT_HOME/re_inst
 BIN_INST=$DOT_INST/bin
-if [ -d $DOT_INST ]; then
+if [ -d "$DOT_INST" ]; then
 	export DOT_INST
 	export BIN_INST
 fi
 
 DOT_SHELL=$GIT_HOME/re_shell
 BIN_SHELL=$DOT_SHELL/bin
-SHELLSOURCE=$DOT_SHELL/sources
+SHELLSOURCE=$DOT_SHELL/home/sources
 export DOT_SHELL
 export BIN_SHELL
-export SHELLSOURCE
+export HELLSOURCE
 
 DOT_RUN=$GIT_HOME/re_run
 BIN_RUN=$DOT_RUN/bin
-if [ -d $DOT_RUN ]; then
+if [ -d "$DOT_RUN" ]; then
 	export DOT_RUN
 	export BIN_RUN
 fi
@@ -95,21 +95,14 @@ fi
 my_array=("functions" "bash_func" "exports" "aliases" "paths" "completions" "bash_prompt")
 
 for m in "${my_array[@]}"; do
-	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
+	[[ -f "$SHELLSOURCE/my_$m" ]] && . "$SHELLSOURCE/my_$m"
 done
 
 # Load my keys.
 # sshkeys
 
 # -------------------------------------------------------------------------- }}}
-echo ${HOSTNAME} "on" ${OSTYPE}
-
-# Source the Lazyman shell initialization for aliases and nvims selector
-# shellcheck source=.config/nvim-Lazyman/.lazymanrc
-#[ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
-# Source the Lazyman .nvimsbind for nvims key binding
-# shellcheck source=.config/nvim-Lazyman/.nvimsbind
-#[ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+echo "${HOSTNAME} on ${OSTYPE}"
 
 if command -v zoxide >/dev/null; then
 	eval "$(zoxide init bash)"
@@ -118,13 +111,10 @@ fi
 #######################################################
 # Set the ultimate amazing command prompt
 #######################################################
-
 # Install Starship - curl -sS https://starship.rs/install.sh | sh
-
 # eval "$(starship init bash)"
 
 #Autojump
-
 if [ -f "/usr/share/autojump/autojump.sh" ]; then
 	. /usr/share/autojump/autojump.sh
 elif [ -f "/usr/share/autojump/autojump.bash" ]; then
@@ -134,18 +124,3 @@ else
 fi
 
 # alias hug="hugo server -F --bind=10.0.0.210 --baseURL=http://10.0.0.210"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ru/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-	eval "$__conda_setup"
-else
-	if [ -f "/home/ru/miniconda3/etc/profile.d/conda.sh" ]; then
-		. "/home/ru/miniconda3/etc/profile.d/conda.sh"
-	else
-		export PATH="/home/ru/miniconda3/bin:$PATH"
-	fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<

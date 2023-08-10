@@ -609,218 +609,107 @@ derez-greenclip() {
 # Fancy cd that can cd into parent directory, if trying to cd into file.
 # useful with ^F fuzzy searcher.
 cd() {
-    if (( $+2 )); then
-        builtin cd "$@"
-        return 0
-    fi
+	if (($ + 2)); then
+		builtin cd "$@"
+		return 0
+	fi
 
-    if [ -f "$1" ]; then
-        echo "${yellow}cd ${1:h}${NC}" >&2
-        builtin cd "${1:h}"
-        ls -l "$1"
-    else
-        builtin cd "${@}"
-    fi
+	if [ -f "$1" ]; then
+		echo "${yellow}cd ${1:h}${NC}" >&2
+		builtin cd "${1:h}"
+		ls -l "$1"
+	else
+		builtin cd "${@}"
+	fi
 }
-
 
 over_ssh() {
-    if [ -n "${SSH_CLIENT}" ]; then
-        return 0
-    else
-        return 1
-    fi
+	if [ -n "${SSH_CLIENT}" ]; then
+		return 0
+	else
+		return 1
+	fi
 }
 
-reload () {
-    exec "${SHELL}" "$@"
+reload() {
+	exec "${SHELL}" "$@"
 }
 
 startx() {
-    exec =startx "$@"
+	exec =startx "$@"
 }
 
 man() {
-    if command -v vimmanpager >/dev/null 2>&1; then
-        PAGER="vimmanpager" command man "$@"
-    else
-        command man "$@"
-    fi
+	if command -v vimmanpager >/dev/null 2>&1; then
+		PAGER="vimmanpager" command man "$@"
+	else
+		command man "$@"
+	fi
 }
 
 confirm() {
-    local answer
-    echo -ne "zsh: sure you want to run '${YELLOW}$*${NC}' [yN]? "
-    read -q answer
-        echo
-    if [[ "${answer}" =~ ^[Yy]$ ]]; then
-        command "${@}"
-    else
-        return 1
-    fi
+	local answer
+	echo -ne "zsh: sure you want to run '${YELLOW}$*${NC}' [yN]? "
+	read -q answer
+	echo
+	if [[ "${answer}" =~ ^[Yy]$ ]]; then
+		command "${@}"
+	else
+		return 1
+	fi
 }
 
 confirm_wrapper() {
-    if [ "$1" = '--root' ]; then
-        local as_root='true'
-        shift
-    fi
+	if [ "$1" = '--root' ]; then
+		local as_root='true'
+		shift
+	fi
 
-    local prefix=''
+	local prefix=''
 
-    if [ "${as_root}" = 'true' ] && [ "${USER}" != 'root' ]; then
-        prefix="sudo"
-    fi
-    confirm ${prefix} "$@"
+	if [ "${as_root}" = 'true' ] && [ "${USER}" != 'root' ]; then
+		prefix="sudo"
+	fi
+	confirm ${prefix} "$@"
 }
 
 poweroff() { confirm_wrapper --root $0 "$@"; }
 reboot() { confirm_wrapper --root $0 "$@"; }
 hibernate() { confirm_wrapper --root $0 "$@"; }
 
-# Убедитесь, что / добавляется после табуляции к каталогам.
-# если не отключить его, $LBUFFER не будет иметь слэша в конце.
-# а он необходим для работы _append_path_to_buffer...
-# setopt AUTO_PARAM_SLASH
-#unsetopt AUTO_REMOVE_SLASH
-
-_select_path_with_fzy() {
-    (
-        if [ "$1" != '.' ]; then
-            if ! [ -d $~1 ]; then
-                echo -e "${yellow}The $1 is not a directory.${NC}"  >&2
-                return
-            fi
-            cd $~1
-        fi
-
-        find -L . \( -type d -printf "%p/\n" , -type f -print \) 2>/dev/null | cut -c 3- | sort | fzy
-    )
-}
-
-_append_path_to_buffer() {
-    local selected_path
-
-    if ! command -v fzy >/dev/null 2>&1; then
-        echo 'No fzy binary found in $PATH.'
-        return 1
-    fi
-    echo
-    print -nr "${zle_bracketed_paste[2]}" >/dev/tty
-    {
-        if [ "${LBUFFER[-1]}" = '/' ]; then
-            search_in="${LBUFFER##*[$'\t' ]}"
-        else
-            search_in='.'
-        fi
-
-        selected_path="$(_select_path_with_fzy "${search_in}")"
-    } always {
-        print -nr "${zle_bracketed_paste[1]}" >/dev/tty
-    }
-    if [ "${selected_path}" ]; then
-        if [[ "${LBUFFER[-1]}" =~ [[:alnum:]] ]]; then
-            # if last character is a word character, insert space.
-            # before inserting selected path. Useful when one's lazy 
-            # and use 'vim^F', yet works okay with 'cmd foo=^F'.
-            LBUFFER+=" "
-        fi
-        # LBUFFER+="${(q)selected_path}"
-    fi
-    zle reset-prompt
-}
-zle -N _append_path_to_buffer
-bindkey "^F" _append_path_to_buffer
-
-_history_search_with_fzy() {
-    local selected_history_entry
-
-    if ! command -v fzy >/dev/null 2>&1; then
-        echo 'No fzy binary found in $PATH.'
-        return 1
-    fi
-
-    if ! command -v awk >/dev/null 2>&1; then
-        echo 'No awk binary found in $PATH.'
-        return 1
-    fi
-    echo
-
-    print -nr "${zle_bracketed_paste[2]}" >/dev/tty
-    {
-        # The awk is used to filter out duplicates, keeping the most 
-        # recent entries, while not re-ordering the history list.
-        selected_history_entry="$(fc -nrl 1 | awk '!v[$0]++' | fzy)"
-    } always {
-        print -nr "${zle_bracketed_paste[1]}" >/dev/tty
-    }
-    if [ "${selected_history_entry}" ]; then
-        BUFFER="${selected_history_entry}"
-        CURSOR="${#BUFFER}"
-    fi
-    zle reset-prompt
-}
-zle -N _history_search_with_fzy
-bindkey "^T" _history_search_with_fzy
-
-# ^A to open new terminal in current working directory
-# Check `logname` so we won't create new terminal as user after `su`.
-_open_new_terminal_here(){
-    if \
-        [ "${XAUTHORITY}" ] && \
-        [ "${DISPLAY}" ] && \
-        [ "${LOGNAME}" = "$(logname)" ] && \
-        command -v $TERM >/dev/null 2>&1
-    then
-        # Spawn terminal with clean login shell.
-        env -i \
-            XAUTHORITY="${XAUTHORITY}" \
-            PATH="${PATH}" \
-            HOME="${HOME}" \
-            DISPLAY="${DISPLAY}" \
-            LOGNAME="${LOGNAME}" \
-            SHELL="${SHELL}" \
-            LANG="${LANG}" \
-            $TERM -e "${SHELL}" --login >/dev/null 2>&1 &!
-    fi
-}
-zle -N _open_new_terminal_here
-bindkey "^K" _open_new_terminal_here
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 run_under_tmux() {
-    # Run $1 under session or attach if such session already exist.
-    # $2 is optional path, if no specified, will use $1 from $PATH.
-    # If you need to pass extra variables, use $2 for it as in example below..
-    # Example usage:
-    #   torrent() { run_under_tmux 'rtorrent' '/usr/local/rtorrent-git/bin/rtorrent'; }
-    #   mutt() { run_under_tmux 'mutt'; }
-    #   irc() { run_under_tmux 'irssi' "TERM='screen' command irssi"; }
+	# Run $1 under session or attach if such session already exist.
+	# $2 is optional path, if no specified, will use $1 from $PATH.
+	# If you need to pass extra variables, use $2 for it as in example below..
+	# Example usage:
+	#   torrent() { run_under_tmux 'rtorrent' '/usr/local/rtorrent-git/bin/rtorrent'; }
+	#   mutt() { run_under_tmux 'mutt'; }
+	#   irc() { run_under_tmux 'irssi' "TERM='screen' command irssi"; }
 
+	# There is a bug in linux's libevent...
+	# export EVENT_NOEPOLL=1
 
-    # There is a bug in linux's libevent...
-    # export EVENT_NOEPOLL=1
+	command -v tmux >/dev/null 2>&1 || return 1
 
-    command -v tmux >/dev/null 2>&1 || return 1
+	if [ -z "$1" ]; then return 1; fi
+	local name="$1"
+	if [ -n "$2" ]; then
+		local execute="$2"
+	else
+		local execute="command ${name}"
+	fi
 
-    if [ -z "$1" ]; then return 1; fi
-        local name="$1"
-    if [ -n "$2" ]; then
-        local execute="$2"
-    else
-        local execute="command ${name}"
-    fi
-
-    if tmux has-session -t "${name}" 2>/dev/null; then
-        tmux attach -d -t "${name}"
-    else
-        tmux new-session -s "${name}" "${execute}" \; set-option status \; set set-titles-string "${name} (tmux@${HOST})"
-    fi
+	if tmux has-session -t "${name}" 2>/dev/null; then
+		tmux attach -d -t "${name}"
+	else
+		tmux new-session -s "${name}" "${execute}" \; set-option status \; set set-titles-string "${name} (tmux@${HOST})"
+	fi
 }
 
 irc() { run_under_tmux irssi "TERM='screen' command irssi"; }
 #-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-
 
 view_csv() {
 	if programExists tidy-viewer; then
@@ -831,15 +720,12 @@ view_csv() {
 }
 alias csv="view_csv"
 
-
-
-
 yt() {
-  if programExists yt-dlp; then
-    yt-dlp -o - $1 | mpv -
-  elif programExists youtube-dl; then
-    youtube-dl -o - $1 | mpv -
-  else
-    echo "no-no"
-  fi
+	if programExists yt-dlp; then
+		yt-dlp -o - $1 | mpv -
+	elif programExists youtube-dl; then
+		youtube-dl -o - $1 | mpv -
+	else
+		echo "no-no"
+	fi
 }
