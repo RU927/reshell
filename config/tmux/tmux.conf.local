@@ -500,3 +500,10 @@ bind -r m resize-pane -Z
 
 bind-key -n 'C-\' new-window -n bookmarks -c $HOME \; \
     send-keys 'fzf-surfraw && tmux kill-window' 'Enter'
+
+bind-key s display-popup -E "\
+    tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
+    sed '/^$/d' |\
+    fzf --reverse --header jump-to-session --preview 'tmux capture-pane -pt {}'  |\
+    xargs tmux switch-client -t"
+
