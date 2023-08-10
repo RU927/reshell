@@ -60,7 +60,7 @@ case "${OSTYPE}" in
 linux*) CONDA_PREFIX="/home/ru/miniconda3" ;;
 darwin*) CONDA_PREFIX="/home/ru/miniconda3" ;;
 esac
-if [[ -f "${CONDA_PREFIX}/bin/conda" ]]; then
-	eval "$("${CONDA_PREFIX}"/bin/conda shell.zsh hook)"
+if [[ -f ${CONDA_PREFIX}/bin/conda ]]; then
+	eval "$("${CONDA_PREFIX}/bin/conda" "shell.zsh" "hook")"
 fi
 # -------------------------------------------------------------------------- }}}
