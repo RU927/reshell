@@ -716,6 +716,7 @@ view_csv() {
 		tidy-viewer "$1"
 	else
 		command cat "$1" | head -n 25 | column -ts,
+		# command cat "$1" | column -t -s, | less -S
 	fi
 }
 alias csv="view_csv"
