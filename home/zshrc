@@ -218,12 +218,6 @@ done
 # done
 
 
-if [ -f "$HOME"/keys ]; then 
-  source "$HOME"/keys 
-else
-  echo "api-key file not found"
-fi
-
 
 #plugins
 if (( $+commands[sheldon] )); then              # только для zsh

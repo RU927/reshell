@@ -13,3 +13,9 @@ export PATH="$HOME/.cargo/bin:$PATH"
 # export XDG_CONFIG_HOME=$HOME/.config
 # export XDG_CURRENT_DESKTOP="KDE"
 
+if [ -d "$HOME/keysdir" ]; then 
+  export KEYSDIR="$HOME/keysdir"
+  source $KEYSDIR/export
+else
+  echo "api-key dir not found"
+fi

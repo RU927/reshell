@@ -1,0 +1,12 @@
+#!/bin/bash
+# if lsblk -l | awk '/sda1/ {print $1}' >/dev/null 2>&1; then
+# 	echo "yes"
+# fi
+
+if [ -e /dev/sdb1 ]; then
+	echo "yes"
+	sudo mount /dev/sdb1 ~/usb
+	ln ~/keysdir ~/usb/keysdir
+else
+	echo "keyfile or flash not found"
+fi
