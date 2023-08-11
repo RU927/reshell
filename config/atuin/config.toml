@@ -4,10 +4,10 @@
 # db_path = "~/.history.db"
 
 ## where to store your encryption key, default is your system data directory
-# key_path = "~/.key"
+key_path = "$KEYSDIR/atuin_key"
 
 ## where to store your auth session token, default is your system data directory
-session_path = "$ATUIN_KEY"
+session_path = "$KEYSDIR/atuin_session_token"
 
 ## date format used, either "us" or "uk"
 # dialect = "us"
@@ -28,11 +28,11 @@ session_path = "$ATUIN_KEY"
 
 ## which search mode to use
 ## possible values: prefix, fulltext, fuzzy, skim
-# search_mode = "fuzzy"
+search_mode = "skim"
 
 ## which filter mode to use
 ## possible values: global, host, session, directory
-# filter_mode = "global"
+filter_mode = "host"
 
 ## which filter mode to use when atuin is invoked from a shell up-key binding
 ## the accepted values are identical to those of "filter_mode"
@@ -41,7 +41,7 @@ session_path = "$ATUIN_KEY"
 
 ## which style to use
 ## possible values: auto, full, compact
-# style = "auto"
+style = "compact"
 
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
