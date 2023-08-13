@@ -43,13 +43,18 @@ export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
 export GOBIN="$GOPATH/bin"
 
 export CONDA_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/miniconda3"
+export CONDARC="$HOME/.condarc"
+
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
+
+
+# export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
 
 
 
 # export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
 # export WGETRC="${XDG_CONFIG_HOME:-$HOME/.config}/wget/wgetrc"
 # export PASSWORD_STORE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/password-store"
-# export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
 # export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 # export ZDOTDIR="$HOME/.config/zsh"
 
