@@ -12,20 +12,20 @@ esac
 if [[ -f ${CONDA_PREFIX}/bin/conda ]]; then
 	eval "$("${CONDA_PREFIX}/bin/conda" "shell.zsh" "hook")"
 fi
+# # Ruby Environment Manager
+# if programExists rbenv; then
+# 	eval "$(rbenv init - n)"
+# fi
+# # NODE Environment Manager
+# if programExists fnm; then
+# 	eval "$(fnm env --use-on-cd)"
+# fi
+# # This loads nvm
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 
 # prependToPath "$CARGO_HOME/bin
-
-# Ruby Environment Manager
-if programExists rbenv; then
-	eval "$(rbenv init - n)"
-fi
-
-# NODE Environment Manager
-if programExists fnm; then
-	eval "$(fnm env --use-on-cd)"
-fi
-  # This loads nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Packagemanagers
 # Homebrew
