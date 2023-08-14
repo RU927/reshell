@@ -65,10 +65,19 @@ setup_git_prompt() {
 
 }
 
+prompt_nvm() {
+  local fnm_default
+  fnm_default=$(fnm list | grep default | awk '{ print $2 }') || return
+  local fnm_current=$(fnm current)
+  [[ $fnm_default != $fnm_current ]] || return
+  
+  # nvm_prompt=" %F{blue}[%F{253}${fnm_current}%F{blue}]"
+  nvm_prompt=" ${fnm_current}"
+}
+
 precmd() {
     # Set terminal title.
     termtitle precmd
-
     # Set optional git part of prompt.
     setup_git_prompt
 }
