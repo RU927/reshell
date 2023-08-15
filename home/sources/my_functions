@@ -392,16 +392,42 @@ pwdtail() {
 }
 
 # Show current network information
+
+if [ "$HOST" = vaio ]; then
+	radio_adapter=wlp7s0
+elif [ "$HOST" = pcRU ]; then
+	radio_adapter=wlx60e32716669c
+	lan_adapter=enp2s0
+fi
+
 netinfo() {
 	echo "--------------- Network Information ---------------"
-	/sbin/ifconfig | awk /'inet / {print $2}'
-	echo ""
-	/sbin/ifconfig | awk /'broadcast / {print $6}'
-	echo ""
-	/sbin/ifconfig | awk /'inet / {print $4}'
-	echo ""
-	/sbin/ip link | awk /'ether / {print $2,$4}'
-	echo "---------------------------------------------------"
+	my_adapter=("$lan_adapter" "$radio_adapter")
+	for m in "${my_adapter[@]}"; do
+		echo "$m"
+		echo ""
+		/sbin/ifconfig "$m" | awk /'inet / {print "IPV4: " $2}'
+		echo ""
+		/sbin/ifconfig "$m" | awk /'broadcast / {print "BROADCAST: " $6}'
+		echo ""
+		/sbin/ifconfig "$m" | awk /'inet / {print "NETMASK: " $4}'
+		echo ""
+		/sbin/ifconfig "$m" | awk /'ether / {print "MAC: " $2}'
+		# $ ifconfig -a | awk '/HWaddr/ {print "Interface: " $1 "\t MAC: " $NF}'
+		echo "---------------------------------------------------"
+	done
+
+	# echo "--------------- Network Information ---------------"
+	# /sbin/ifconfig | awk /'inet / {print "IPV4: " $2}'
+	# echo ""
+	# /sbin/ifconfig | awk /'broadcast / {print "BROADCAST: " $6}'
+	# echo ""
+	# /sbin/ifconfig | awk /'inet / {print "NETMASK: " $4}'
+	# echo ""
+	# /sbin/ip link | awk /'ether / {print "MAC: " $2 "\t " $4}'
+	# # $ ifconfig -a | awk '/HWaddr/ {print "Interface: " $1 "\t MAC: " $NF}'
+	#
+	# echo "---------------------------------------------------"
 }
 
 # IP address lookup
@@ -411,6 +437,7 @@ if [ "$HOST" = vaio ]; then
 	radio_adapter=wlp7s0
 elif [ "$HOST" = pcRU ]; then
 	radio_adapter=wlx60e32716669c
+	lan_adapter=enp2s0
 fi
 
 function whatsmyip() {
