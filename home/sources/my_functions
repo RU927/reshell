@@ -394,13 +394,13 @@ pwdtail() {
 # Show current network information
 netinfo() {
 	echo "--------------- Network Information ---------------"
-	/sbin/ifconfig | awk /'inet addr/ {print $2}'
+	/sbin/ifconfig | awk /'inet / {print $2}'
 	echo ""
-	/sbin/ifconfig | awk /'Bcast/ {print $3}'
+	/sbin/ifconfig | awk /'broadcast / {print $6}'
 	echo ""
-	/sbin/ifconfig | awk /'inet addr/ {print $4}'
-
-	/sbin/ifconfig | awk /'HWaddr/ {print $4,$5}'
+	/sbin/ifconfig | awk /'inet / {print $4}'
+	echo ""
+	/sbin/ip link | awk /'ether / {print $2,$4}'
 	echo "---------------------------------------------------"
 }
 
