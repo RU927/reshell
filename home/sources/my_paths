@@ -51,7 +51,7 @@ prependToPath "$HOME"/.local/share/nvim/mason/bin
 appendToPath "$HOME"/.config/guix/current/bin
 appendToPath "$HOME"/.guix-profile/bin
 
-prependToPath "$HOME"/.local/share/bob/nvim-bin
+# prependToPath "$HOME"/.local/share/bob/nvim-bin
 
 appendToPath "$GOROOT/bin"
 appendToPath "$GOBIN"

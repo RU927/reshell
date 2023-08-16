@@ -228,4 +228,6 @@ if (( $+commands[atuin] )); then
   eval "$(atuin init zsh)"
 fi
 
-
+if (( $+commands[navi] )); then
+  eval "$(navi widget zsh)"
+fi
