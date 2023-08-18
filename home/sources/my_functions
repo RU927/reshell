@@ -700,9 +700,9 @@ confirm_wrapper() {
 	confirm ${prefix} "$@"
 }
 
-poweroff() { confirm_wrapper --root $0 "$@"; }
-reboot() { confirm_wrapper --root $0 "$@"; }
-hibernate() { confirm_wrapper --root $0 "$@"; }
+# poweroff() { confirm_wrapper --root $0 "$@"; }
+# reboot() { confirm_wrapper --root $0 "$@"; }
+# hibernate() { confirm_wrapper --root $0 "$@"; }
 
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
