@@ -16,7 +16,7 @@ export R_HOME=/usr/lib/R
 export LANG=ru_RU.UTF-8
 
 export LD_LIBRARY_PATH=$HOME/miniconda3/envs/JupyterSystemEnv/lib
-export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
 # {{{ History and path
 
