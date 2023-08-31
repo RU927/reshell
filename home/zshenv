@@ -1,14 +1,28 @@
-## PATH for Awesomewm 
-#export PATH="/usr/local/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-#export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-#export PATH="/home/linuxbrew/.linuxbrew/bin"
-
 # awesome-client "local naughty=require('naughty'); require('awful').spawn.easy_async('env', function(out) naughty.notify({title="ENV", text=out})end)"
 
 # export XDG_CURRENT_DESKTOP="KDE"
 # export XDG_CONFIG_HOME=$HOME/.config
 # export XDG_CURRENT_DESKTOP="KDE"
+
+dirExists() {
+	[[ -d "$1" ]]
+}
+
+programExists() {
+	which "$1" &>/dev/null
+}
+
+appendToPath() {
+	if dirExists "$1"; then
+		[[ ":$PATH:" != *"$1"* ]] && export PATH="${PATH}:$1"
+	fi
+}
+
+prependToPath() {
+	if dirExists "$1"; then
+		[[ ":$PATH:" != *"$1"* ]] && export PATH="$1:${PATH}"
+	fi
+}
 
 if [ -f "$HOME/.keysdir/export" ]; then 
   export keysdir="$HOME/.keysdir"
@@ -20,10 +34,8 @@ fi
 # default apps
 export EDITOR="nvim"
 export TERMINAL="alacritty"
-export BROWSER="firefox"
+# export BROWSER="firefox"
 
-# Adds ~/.local/bin and subfolders to $PATH
-# export PATH="$PATH:${$(find ~/.local/bin -maxdepth 1 -type d -printf %p:)%%:}"
 
 # cleaning up home folder
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -37,27 +49,122 @@ export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 # export JULIA_DEPOT_PATH="$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
 # export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
 
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 
+###
+prependToPath "$HOME"/.local/bin
+# appendToPath "/usr/games"
+
+
+
+### Packagemanagers
+## Homebrew
+case "${OSTYPE}" in
+  linux*) brew_path="/home/linuxbrew/.linuxbrew" ;;
+  darwin*) brew_path="/opt/homebrew" ;;
+esac
+if [[ -f "${brew_path}/bin/brew" ]]; then
+	eval "$("${brew_path}"/bin/brew shellenv)"
+fi
+
+## GUIX
+appendToPath "$HOME"/.config/guix/current/bin
+appendToPath "$HOME"/.guix-profile/bin
+
+### Programming languages.
+## GO
 export GOROOT="/usr/local/go"
 export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
 export GOBIN="$GOPATH/bin"
+appendToPath "$GOROOT/bin"
+appendToPath "$GOBIN"
 
+## Python Environment Manager
 export CONDA_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/miniconda3"
 export CONDARC="$HOME/.condarc"
+case "${OSTYPE}" in
+  linux*) CONDA_PREFIX="$CONDA_ROOT" ;;
+  darwin*) CONDA_PREFIX="" ;;
+esac
+if [[ -f ${CONDA_PREFIX}/bin/conda ]]; then
+	eval "$("${CONDA_PREFIX}/bin/conda" "shell.zsh" "hook")"
+fi
 
-export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 
-
+## RUST
 export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
 export RUSTUP_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/rustup"
-export PATH="$CARGO_HOME/bin:$PATH"
+prependToPath "$CARGO_HOME/bin"
 
+## Ruby Environment Manager
+export RBENV_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/rbenv
+# if programExists rbenv; then
+# 	eval "$(rbenv init - n)"
+# fi
+
+## NODE Environment Managers
+# FastNodeManager in Rust "https://github.com/Schniz/fnm"
+# if programExists fnm; then
+# 	eval "$(fnm env --use-on-cd)"
+# fi
+
+# NodeVersionManage "https://github.com/nvm-sh/nvm"
+export NVM_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/nvm
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 
-export NVM_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/nvm
-export RBENV_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/rbenv
+
+GIT_HOME=$HOME/REPOS
+export GIT_HOME
+
+DOT_INST=$GIT_HOME/re_inst
+export DOT_INST
+
+
+DOT_SHELL=$GIT_HOME/re_shell
+BIN_SHELL=$DOT_SHELL/bin
+export DOT_SHELL
+export BIN_SHELL
+
+
+DOT_RUN=$GIT_HOME/re_run
+BIN_RUN=$DOT_RUN/bin
+if [ -d $DOT_RUN ]; then
+  export DOT_RUN
+  export BIN_RUN
+fi
+
+DOT_NET=$GIT_HOME/re_net
+BIN_NET=$DOT_INST/bin
+if [ -d $DOT_NET ] ; then
+  export DOT_NET
+  export BIN_NET
+fi
+
+
+
+appendToPath "$DOT_NET"
+# appendToPath "$BIN_SHELL"
+# appendToPath "$BIN_RUN"
+
+for d in $(command du "$BIN_SHELL" | cut -f2); do
+	if [ -d "$d" ]; then
+		appendToPath "$d"
+	fi
+done
+
+for d in $(command du "$BIN_RUN" | cut -f2); do
+	if [ -d "$d" ]; then
+		appendToPath "$d"
+	fi
+done
+
+# Adds ~/.local/bin and subfolders to $PATH
+# export PATH="$PATH:${$(find ~/.local/bin -maxdepth 1 -type d -printf %p:)%%:}"
+
 
 
 # export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
