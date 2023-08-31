@@ -120,51 +120,20 @@ export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 GIT_HOME=$HOME/REPOS
 export GIT_HOME
 
-DOT_INST=$GIT_HOME/re_inst
-export DOT_INST
-
-
-DOT_SHELL=$GIT_HOME/re_shell
-BIN_SHELL=$DOT_SHELL/bin
-export DOT_SHELL
-export BIN_SHELL
-
-
-DOT_RUN=$GIT_HOME/re_run
-BIN_RUN=$DOT_RUN/bin
-if [ -d $DOT_RUN ]; then
-  export DOT_RUN
-  export BIN_RUN
-fi
-
-DOT_NET=$GIT_HOME/re_net
-BIN_NET=$DOT_INST/bin
-if [ -d $DOT_NET ] ; then
-  export DOT_NET
-  export BIN_NET
-fi
-
-
-
-appendToPath "$DOT_NET"
-# appendToPath "$BIN_SHELL"
-# appendToPath "$BIN_RUN"
-
-for d in $(command du "$BIN_SHELL" | cut -f2); do
-	if [ -d "$d" ]; then
-		appendToPath "$d"
-	fi
-done
-
-for d in $(command du "$BIN_RUN" | cut -f2); do
-	if [ -d "$d" ]; then
-		appendToPath "$d"
-	fi
+my_repo=("inst" "shell" "run" "net")
+for r in "$my_repo[@]"; do
+  [[ -d $GIT_HOME/re_$r ]] && eval DOT_$r=$GIT_HOME/re_$r && export DOT_$r
+  if [ -d $GIT_HOME/re_$r/bin ]; then
+    eval BIN_$r=$GIT_HOME/re_$r/bin && export BIN_$r
+    # for d in $(command du "\$BIN_$r" | cut -f2); do   # "\$BIN_$r" a not visible after eval?
+    for d in $(find "$GIT_HOME/re_$r/bin" -maxdepth 1 -type d); do
+        appendToPath "$d"
+    done
+  fi
 done
 
 # Adds ~/.local/bin and subfolders to $PATH
 # export PATH="$PATH:${$(find ~/.local/bin -maxdepth 1 -type d -printf %p:)%%:}"
-
 
 
 # export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
