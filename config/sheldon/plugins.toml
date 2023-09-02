@@ -20,6 +20,9 @@ github = 'zsh-users/zsh-autosuggestions'
 [plugins.zsh-syntax-highlighting]
 github = 'zsh-users/zsh-syntax-highlighting.git'
 
+[plugins.forgit]
+github = 'wfxr/forgit'
+
 # For example:
 #
 # [plugins.base16]
