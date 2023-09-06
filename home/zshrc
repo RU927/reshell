@@ -163,17 +163,17 @@ esac
 bindkey "^R" history-incremental-pattern-search-backward 
 bindkey "^S" history-incremental-pattern-search-forward
 
-if [ -f ~/.alert ]; then echo '>>> Check ~/.alert'; fi
+# if [ -f ~/.alert ]; then echo '>>> Check ~/.alert'; fi
 
 
-DOT_SHELL=$GIT_HOME/re_shell
-BIN_SHELL=$DOT_SHELL/bin
-SHELLSOURCE=$DOT_SHELL/home/sources
-my_array=("functions" "zsh_functions" "exports" "aliases" "zsh_prompt")
-
-for m in "${my_array[@]}"; do
-	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
-done
+# DOT_SHELL=$GIT_HOME/re_shell
+# BIN_SHELL=$DOT_SHELL/bin
+# SHELLSOURCE=$DOT_SHELL/home/sources
+# my_array=("functions" "zsh_functions" "exports" "aliases" "zsh_prompt")
+#
+# for m in "${my_array[@]}"; do
+# 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
+# done
 
 # Test and then source exported variables.
 # my_array=("exports" "options" "aliases" "functions" "zle" "bindings" "compctl" "style" "misc" "paths" "prompt")
@@ -196,3 +196,4 @@ fi
 if (( $+commands[navi] )); then
   eval "$(navi widget zsh)"
 fi
+

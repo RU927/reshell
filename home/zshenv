@@ -36,6 +36,8 @@ export EDITOR="nvim"
 export TERMINAL="alacritty"
 # export BROWSER="firefox"
 
+source $HOME/.sources/my_exports
+
 
 # cleaning up home folder
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -102,6 +104,8 @@ export RBENV_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/rbenv
 # 	eval "$(rbenv init - n)"
 # fi
 
+[ -f "/home/ru/.ghcup/env" ] && source "/home/ru/.ghcup/env" # ghcup-env
+
 ## NODE Environment Managers
 # FastNodeManager in Rust "https://github.com/Schniz/fnm"
 # if programExists fnm; then
@@ -119,6 +123,17 @@ export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 
 GIT_HOME=$HOME/REPOS
 export GIT_HOME
+
+DOT_SHELL=$GIT_HOME/re_shell
+BIN_SHELL=$DOT_SHELL/bin
+SHELLSOURCE=$DOT_SHELL/home/sources
+my_array=("functions" "zsh_functions" "exports" "aliases" "zsh_prompt" "path")
+
+for m in "${my_array[@]}"; do
+	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
+done
+
+
 
 my_repo=("inst" "shell" "run" "net")
 for r in "$my_repo[@]"; do
