@@ -86,18 +86,19 @@ export RBENV_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/rbenv
 # 	eval "$(rbenv init - n)"
 # fi
 
+## Haskel
 [ -f "/home/ru/.ghcup/env" ] && source "/home/ru/.ghcup/env" # ghcup-env
 
 ## NODE Environment Managers
 # FastNodeManager in Rust "https://github.com/Schniz/fnm"
-# if programExists fnm; then
-# 	eval "$(fnm env --use-on-cd)"
-# fi
+if programExists fnm; then
+	eval "$(fnm env --use-on-cd)"
+fi
 
 # NodeVersionManage "https://github.com/nvm-sh/nvm"
 export NVM_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/nvm
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
@@ -108,9 +109,9 @@ export GIT_HOME
 DOT_SHELL=$GIT_HOME/re_shell
 # BIN_SHELL=$DOT_SHELL/bin
 SHELLSOURCE=$DOT_SHELL/home/sources
-my_array=("aliases" "zsh_prompt")
+my_sourses=("aliases" "zsh_prompt")
 
-for m in "${my_array[@]}"; do
+for m in "${my_sourses[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
 
