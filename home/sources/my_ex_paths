@@ -322,11 +322,10 @@ fi
 
 export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
 
-# export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
-# export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
 # export GIT_SSL_CAINFO="$SSL_CERT_FILE"
-
-# export CURL_CA_BUNDLE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+# export CURL_CA_BUNDLE="$SSL_CERT_FILE"
 
 if [ -f "$HOME/.config/guix/current" ]; then
 	GUIX_PROFILE="/home/ru/.config/guix/current"
