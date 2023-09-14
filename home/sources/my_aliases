@@ -273,7 +273,7 @@ alias ,mb='$EDITOR $SHELLSOURCE/bashrc'
 alias ,mc='$EDITOR $SHELLSOURCE/my_completions'
 alias ,me='$EDITOR $SHELLSOURCE/my_ex_paths'
 alias ,mf='$EDITOR $SHELLSOURCE/my_functions'
-alias ,mp='$EDITOR $SHELLSOURCE/my_paths'
+alias ,mp='$EDITOR $SHELLSOURCE/my_zsh_prompt'
 alias ,mt='$EDITOR $SHELLSOURCE/my_prompt'
 
 alias ,mz='$EDITOR $DOT_SHELL/home/zshrc'

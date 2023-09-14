@@ -317,7 +317,7 @@ export READER="zathura"
 # -------------------------------------------------------------------------- }}}
 if [ -f "$HOME/.guix-profile" ]; then
 	GUIX_PROFILE="/home/ru/.guix-profile"
-	. "$GUIX_PROFILE/etc/profile"
+	command source "$GUIX_PROFILE/etc/profile"
 fi
 
 export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
@@ -325,10 +325,10 @@ export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
 # export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
 # export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
 # export GIT_SSL_CAINFO="$SSL_CERT_FILE"
-#
+
 # export CURL_CA_BUNDLE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
 
 if [ -f "$HOME/.config/guix/current" ]; then
 	GUIX_PROFILE="/home/ru/.config/guix/current"
-	. "$GUIX_PROFILE/etc/profile"
+	command source "$GUIX_PROFILE/etc/profile"
 fi

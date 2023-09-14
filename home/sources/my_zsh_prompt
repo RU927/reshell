@@ -75,6 +75,10 @@ prompt_nvm() {
   nvm_prompt=" ${fnm_current}"
 }
 
+if [ -n "$GUIX_ENVIRONMENT" ]; then
+  guix_prompt='%F{blue}[%F{red}guix%F{blue}] '
+fi
+
 precmd() {
     # Set terminal title.
     termtitle precmd
@@ -113,7 +117,7 @@ case $USER in
     *)  
         # PROMPT='%B%F{blue}%n@%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{cyan}%1~${git_prompt}%F{cyan} %# %b%f%k'
         PROMPT='%B%F{red}%n%B%F{reset_color}*%B%F{blue}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{yellow}%1~${git_prompt}%F{cyan} '
-        RPROMPT='%B%F{yellow}%~'
+        RPROMPT='${guix_prompt} %B%F{yellow}%~'
 
     ;;
 esac

@@ -90,6 +90,10 @@ prompt_git() {
 	fi
 }
 
+# if [ -n "$GUIX_ENVIRONMENT" ]; then
+# 	export PS1="\u@\h \w [dev]\$ "
+# fi
+
 prompt_node() {
 	if [ -x "$(command -v node)" ]; then
 		node_version=$(node -v)
