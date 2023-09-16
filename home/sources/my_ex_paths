@@ -53,8 +53,24 @@ if [[ -f "${brew_path}/bin/brew" ]]; then
 fi
 
 ## GUIX
-appendToPath "$HOME"/.config/guix/current/bin
-appendToPath "$HOME"/.guix-profile/bin
+if [ -f "$HOME/.guix-profile" ]; then
+	GUIX_PROFILE="/home/ru/.guix-profile"
+	command source "$GUIX_PROFILE/etc/profile"
+fi
+
+export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
+
+# export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+# export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+# export GIT_SSL_CAINFO="$SSL_CERT_FILE"
+# export CURL_CA_BUNDLE="$SSL_CERT_FILE"
+
+# if [ -f "$HOME/.config/guix/current" ]; then
+# 	GUIX_PROFILE="/home/ru/.config/guix/current"
+# 	command source "$GUIX_PROFILE/etc/profile"
+# fi
+# appendToPath "$HOME"/.config/guix/current/bin
+# appendToPath "$HOME"/.guix-profile/bin
 
 ### Programming languages.
 ## GO
@@ -87,18 +103,18 @@ export RBENV_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/rbenv
 # fi
 
 ## Haskel
-[ -f "/home/ru/.ghcup/env" ] && source "/home/ru/.ghcup/env" # ghcup-env
+# [ -f "/home/ru/.ghcup/env" ] && source "/home/ru/.ghcup/env" # ghcup-env
 
 ## NODE Environment Managers
 # FastNodeManager in Rust "https://github.com/Schniz/fnm"
-if programExists fnm; then
-	eval "$(fnm env --use-on-cd)"
-fi
+# if programExists fnm; then
+# 	eval "$(fnm env --use-on-cd)"
+# fi
 
 # NodeVersionManage "https://github.com/nvm-sh/nvm"
 export NVM_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
@@ -109,6 +125,7 @@ export GIT_HOME
 DOT_SHELL=$GIT_HOME/re_shell
 # BIN_SHELL=$DOT_SHELL/bin
 SHELLSOURCE=$DOT_SHELL/home/sources
+
 my_sourses=("aliases" "zsh_prompt")
 
 for m in "${my_sourses[@]}"; do
@@ -193,7 +210,7 @@ export LS_COLORS='no=00:fi=00:di=00;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 # -------------------------------------------------------------------------- }}}
 # {{{ Default Browers, File Manager, and 256 colors.
 if programExists nbrowser; then
-	export BROWSER=$(which nbrowser)
+	export BROWSER="nbrowser"
 elif programExists brave-browser; then
 	export BROWSER=$(which brave-browser)
 elif programExists google-chrome; then
@@ -315,19 +332,3 @@ export READER="zathura"
 # fi
 
 # -------------------------------------------------------------------------- }}}
-if [ -f "$HOME/.guix-profile" ]; then
-	GUIX_PROFILE="/home/ru/.guix-profile"
-	command source "$GUIX_PROFILE/etc/profile"
-fi
-
-export GUIX_LOCPATH=$HOME/.guix-profile/lib/locale
-
-export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
-export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
-# export GIT_SSL_CAINFO="$SSL_CERT_FILE"
-# export CURL_CA_BUNDLE="$SSL_CERT_FILE"
-
-if [ -f "$HOME/.config/guix/current" ]; then
-	GUIX_PROFILE="/home/ru/.config/guix/current"
-	command source "$GUIX_PROFILE/etc/profile"
-fi
