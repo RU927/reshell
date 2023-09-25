@@ -212,27 +212,27 @@ export LS_COLORS='no=00:fi=00:di=00;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 if programExists nbrowser; then
 	export BROWSER="nbrowser"
 elif programExists brave-browser; then
-	export BROWSER=$(which brave-browser)
+	export BROWSER=brave-browser
 elif programExists google-chrome; then
-	export BROWSER=$(which google-chrome)
+	export BROWSER=google-chrome
 elif programExists yandex-browser; then
-	export BROWSER=$(which yandex-browser)
+	export BROWSER=yandex-browser
 elif programExists firefox; then
-	export BROWSER=$(which firefox)
+	export BROWSER=firefox
 else
 	export BROWSER=""
 fi
 
 if programExists w3m; then
-	export BROWSERCLI=$(which w3m)
+	export BROWSERCLI=w3m
 else
 	export BROWSERCLI=""
 fi
 
 if programExists luakit; then
-	export BROWSERMIN=$(which luakit)
+	export BROWSERMIN=luakit
 elif programExists surf; then
-	export BROWSERMIN=$(which surf)
+	export BROWSERMIN=surf
 else
 	export BROWSERMIN=""
 fi
@@ -332,3 +332,13 @@ export READER="zathura"
 # fi
 
 # -------------------------------------------------------------------------- }}}
+
+[ -s "/home/ru/.config/nvim-Lazyman/.lazymanrc" ] && source "/home/ru/.config/nvim-Lazyman/.lazymanrc"
+bindkey -s "^n" "nvims\n"
+
+# bun completions
+[ -s "/home/ru/.bun/_bun" ] && source "/home/ru/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+xport PATH="$BUN_INSTALL/bin:$PATH"
