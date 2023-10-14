@@ -164,3 +164,5 @@ if (( $+commands[navi] )); then
   eval "$(navi widget zsh)"
 fi
 
+bindkey -s "^n" "nvims\n"
+
