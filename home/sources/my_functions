@@ -669,9 +669,9 @@ reload() {
 	exec "${SHELL}" "$@"
 }
 
-startx() {
-	exec=startx "$@"
-}
+# startx() {
+# 	exec=startx "$@"
+# }
 
 man() {
 	if command -v vimmanpager >/dev/null 2>&1; then
