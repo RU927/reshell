@@ -6,7 +6,7 @@
 if [ -e /dev/sdb1 ]; then
 	echo "yes"
 	sudo mount /dev/sdb1 ~/usb
-	ln ~/keysdir ~/usb/keysdir
+	ln ~/$keysdir ~/usb/
 else
 	echo "keyfile or flash not found"
 fi
