@@ -30,7 +30,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
 
-export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 
 # export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
 # export JULIA_DEPOT_PATH="$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
@@ -179,6 +179,7 @@ export R_HOME=/usr/lib/R
 
 export LC_ALL=ru_RU.UTF-8
 export LANG=ru_RU.UTF-8
+export LANGUAGE=ru_RU.UTF-8
 
 # export LD_LIBRARY_PATH=$HOME/miniconda3/envs/JupyterSystemEnv/lib:$LD_LIBRARY_PATH
 # export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH

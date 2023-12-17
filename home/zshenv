@@ -7,7 +7,7 @@
 GIT_HOME=$HOME/REPOS
 DOT_SHELL=$GIT_HOME/re_shell
 SHELLSOURCE=$DOT_SHELL/home/sources
-my_array=("functions" "zsh_functions" "ex_paths")
+my_array=("functions" "zsh_functions" "exports_and_paths")
 for m in "${my_array[@]}"; do
 	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
 done
