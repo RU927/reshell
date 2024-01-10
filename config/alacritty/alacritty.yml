@@ -63,7 +63,7 @@ key_bindings:
 #   args:
 #     - new-session
 #     - -A
-#     - -D
+#     # - -D
 #     - -s
 #     - main
 
