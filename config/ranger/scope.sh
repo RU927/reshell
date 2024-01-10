@@ -39,31 +39,96 @@ FILE_EXTENSION="${FILE_PATH##*.}"
 FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
 
 ## Settings
-HIGHLIGHT_SIZE_MAX=262143 # 256KiB
+# HIGHLIGHT_SIZE_MAX=262143 # 256KiB
+HIGHLIGHT_SIZE_MAX=$((2 * 1024 * 1024)) # 2MiB
+# Maximum height for rendering non-image previews. The higher this number, the
+# slower previews will take to render.
+# By default, render up to 10 times the number of visible lines in the terminal
+# in case the user wants to scroll the review pane. Terminals rarely have more
+# than 100 visible lines, so this should be reasonable in terms of performance.
+MAX_RENDERED_HEIGHT=${MAX_RENDERED_HEIGHT:-$((10 * PV_HEIGHT))}
 HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
 HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-gruvbox-dark}
 HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
+# HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS:-}"
 PYGMENTIZE_STYLE=${PYGMENTIZE_STYLE:-gruvbox-dark}
 OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
 OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+
+FONT_PREVIEW_TEXT='  ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  abcdefghijklmnopqrstuvwxyz
+  0123456789.:,;(*!?)"
+  The quick brown fox jumps over the lazy dog.
+'
+
+# As of 2018-06-13 it seems truecolor previews are not supported in ranger.
+# Therefore, we only enable it when scope is used outside ranger and the
+# terminal seems to support truecolor. See:
+# https://github.com/ranger/ranger/issues/989
+_has_truecolor() {
+	# Running ps is very slow in my tests, so I'm using an environment variable
+	# instead.
+	# [[ "$(ps -o comm --no-heading -p "${PPID}")" == ranger ]]
+	[[ -n "${SCOPE_TRUECOLOR:-}" ]] && [[ ${COLORTERM:-} =~ (truecolor|24bit) ]]
+}
+
+# Runs a command and trims it's output to the first MAX_RENDERED_HEIGHT lines.
+# head can't be used directly because some commands will return errors when
+# their stdout is closed unexpectedly.
+# Using this function can improve performance over passing the full output,
+# because for some reason ranger can be very slow in trimming large output.
+_trim_output() {
+	"$@" | {
+		head -"${MAX_RENDERED_HEIGHT}"
+		cat >/dev/null
+	}
+}
+
+_handle_text() {
+	if [[ "$(stat --printf='%s' -- "${FILE_PATH}")" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+		# The sed command reduces the excessive leading spaces from cat
+		{ cat -n -- "${FILE_PATH}" | sed -E 's/^ *//'; } && exit 5
+	fi
+	local highlight_format pygmentize_format
+	if _has_truecolor; then
+		highlight_format='truecolor'
+	elif [[ "$(tput colors)" -ge 256 ]]; then
+		pygmentize_format='terminal256'
+		highlight_format='xterm256'
+	else
+		pygmentize_format='terminal'
+		highlight_format='ansi'
+	fi
+	# NOTE: on success we return 3 from highlight so that terminal window resizing
+	# will re-trigger the preview.
+	env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+		--out-format="${highlight_format}" \
+		--line-range=1-"${MAX_RENDERED_HEIGHT}" \
+		--force -- "${FILE_PATH}" && exit 3
+	env COLORTERM=8bit bat --color=always --style="plain" \
+		--line-range=:"${MAX_RENDERED_HEIGHT}" \
+		-- "${FILE_PATH}" && exit 5
+	pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}" \
+		-- "${FILE_PATH}" && exit 5
+}
 
 handle_extension() {
 	case "${FILE_EXTENSION_LOWER}" in
 	## Archive
 	a | ace | alz | arc | arj | bz | bz2 | cab | cpio | deb | gz | jar | lha | lz | lzh | lzma | lzo | \
 		rpm | rz | t7z | tar | tbz | tbz2 | tgz | tlz | txz | tZ | tzo | war | xpi | xz | Z | zip)
-		atool --list -- "${FILE_PATH}" && exit 5
-		bsdtar --list --file "${FILE_PATH}" && exit 5
+		_trim_output atool --list -- "${FILE_PATH}" && exit 5
+		_trim_output bsdtar --list --file "${FILE_PATH}" && exit 5
 		exit 1
 		;;
 	rar)
 		## Avoid password prompt by providing empty password
-		unrar lt -p- -- "${FILE_PATH}" && exit 5
+		_trim_output unrar lt -p- -- "${FILE_PATH}" && exit 5
 		exit 1
 		;;
 	7z)
 		## Avoid password prompt by providing empty password
-		7z l -p -- "${FILE_PATH}" && exit 5
+		_trim_output 7z l -p -- "${FILE_PATH}" && exit 5
 		exit 1
 		;;
 
@@ -112,6 +177,7 @@ handle_extension() {
 
 	## JSON
 	json)
+		_handle_text
 		jq --color-output . "${FILE_PATH}" && exit 5
 		python -m json.tool -- "${FILE_PATH}" && exit 5
 		;;
@@ -161,34 +227,46 @@ handle_image() {
 		exit 7
 		;;
 
-	## Video
-	# video/*)
-	#     # Thumbnail
-	#     ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
-	#     exit 1;;
+	# Video
+	video/*)
+		# Thumbnail
+		ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
+		exit 1
+		;;
 
-	## PDF
-	# application/pdf)
-	#     pdftoppm -f 1 -l 1 \
-	#              -scale-to-x "${DEFAULT_SIZE%x*}" \
-	#              -scale-to-y -1 \
-	#              -singlefile \
-	#              -jpeg -tiffcompression jpeg \
-	#              -- "${FILE_PATH}" "${IMAGE_CACHE_PATH%.*}" \
-	#         && exit 6 || exit 1;;
+	# PDF
+	application/pdf)
+		pdftoppm -f 1 -l 1 \
+			-scale-to-x "${DEFAULT_SIZE%x*}" \
+			-scale-to-y -1 \
+			-singlefile \
+			-jpeg -tiffcompression jpeg \
+			-- "${FILE_PATH}" "${IMAGE_CACHE_PATH%.*}" &&
+			exit 6 || exit 1
+		;;
 
-	## ePub, MOBI, FB2 (using Calibre)
-	# application/epub+zip|application/x-mobipocket-ebook|\
-	# application/x-fictionbook+xml)
-	#     # ePub (using https://github.com/marianosimone/epub-thumbnailer)
-	#     epub-thumbnailer "${FILE_PATH}" "${IMAGE_CACHE_PATH}" \
-	#         "${DEFAULT_SIZE%x*}" && exit 6
-	#     ebook-meta --get-cover="${IMAGE_CACHE_PATH}" -- "${FILE_PATH}" \
-	#         >/dev/null && exit 6
-	#     exit 1;;
+	# ePub, MOBI, FB2 (using Calibre)
+	application/epub+zip | application/x-mobipocket-ebook | \
+		application/x-fictionbook+xml)
+		# ePub (using https://github.com/marianosimone/epub-thumbnailer)
+		epub-thumbnailer "${FILE_PATH}" "${IMAGE_CACHE_PATH}" \
+			"${DEFAULT_SIZE%x*}" && exit 6
+		ebook-meta --get-cover="${IMAGE_CACHE_PATH}" -- "${FILE_PATH}" \
+			>/dev/null && exit 6
+		exit 1
+		;;
 
 	## Font
 	application/font* | application/*opentype)
+		if convert -size 600x400 xc:'#ffffff' \
+			-gravity center \
+			-pointsize 20 \
+			-font "${FILE_PATH}" \
+			-fill '#000000' \
+			-annotate +0+0 "${FONT_PREVIEW_TEXT}" \
+			-flatten "${IMAGE_CACHE_PATH}"; then
+			exit 6
+		fi
 		preview_png="/tmp/$(basename "${IMAGE_CACHE_PATH%.*}").png"
 		if fontimage -o "${preview_png}" \
 			--pixelsize "120" \
@@ -300,24 +378,7 @@ handle_mime() {
 
 	## Text
 	text/* | */xml)
-		## Syntax highlight
-		if [[ "$(stat --printf='%s' -- "${FILE_PATH}")" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
-			exit 2
-		fi
-		if [[ "$(tput colors)" -ge 256 ]]; then
-			local pygmentize_format='terminal256'
-			local highlight_format='xterm256'
-		else
-			local pygmentize_format='terminal'
-			local highlight_format='ansi'
-		fi
-		env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
-			--out-format="${highlight_format}" \
-			--force -- "${FILE_PATH}" && exit 5
-		env COLORTERM=8bit bat --color=always --style="plain" \
-			-- "${FILE_PATH}" && exit 5
-		pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}" \
-			-- "${FILE_PATH}" && exit 5
+		_handle_text
 		exit 2
 		;;
 
@@ -351,7 +412,27 @@ handle_fallback() {
 	exit 1
 }
 
-MIMETYPE="$(file --dereference --brief --mime-type -- "${FILE_PATH}")"
+get_mime_type() {
+	# NOTE: As of 2018-06-13 I've encountered many SVG files which are
+	# not detected correctly by xdg-mime (detected as xml instead of svg).
+	# Example command:
+	# xdg-mime query filetype /usr/share/icons/Adwaita/scalable/actions/contact-new-symbolic.svg
+	# This is a workaround to always process files with an svg extension as an
+	# image.
+	if [[ ${FILE_EXTENSION_LOWER} == svg ]]; then
+		'image/svg+xml'
+	else
+		file --dereference --brief --mime-type -- "${FILE_PATH}"
+	fi
+}
+
+MIMETYPE="$(get_mime_type)"
+
+# procfs needs to be displayed using cat.
+if [[ $(realpath "${FILE_PATH}")/ =~ /proc/* ]]; then
+	command cat -v -- "${FILE_PATH}" && exit 0
+fi
+
 if [[ "${PV_IMAGE_ENABLED}" == 'True' ]]; then
 	handle_image "${MIMETYPE}"
 fi
@@ -359,4 +440,5 @@ handle_extension
 handle_mime "${MIMETYPE}"
 handle_fallback
 
+# shellcheck disable=SC2317
 exit 1
