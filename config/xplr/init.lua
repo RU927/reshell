@@ -1,37 +1,154 @@
 ---@diagnostic disable
 local xplr = xplr -- The globally exposed configuration to be overridden.
+version = "0.21.5"
 ---@diagnostic enable
 
--- This is the built-in configuration file that gets loaded and sets the
--- default values when xplr loads, before loading any other custom
--- configuration file.
---
--- You can use this file as a reference to create a your custom config file.
---
--- To create a custom configuration file, you need to define the script version
--- for compatibility checks.
---
--- See https://xplr.dev/en/upgrade-guide
---
--- ```lua
-version = "0.21.5"
--- ```
+local home = os.getenv("HOME")
+local xpm_path = home .. "/.local/share/xplr/dtomvan/xpm.xplr"
+local xpm_url = "https://github.com/dtomvan/xpm.xplr"
+package.path = home .. "/.config/xplr/config/?.lua;" .. home .. "/.config/xplr/?.lua;" .. package.path
+package.path = package.path .. ";" .. home .. "/.config/xplr/plugins/?.lua;"
+package.path = package.path .. ";" .. xpm_path .. "/?.lua;" .. xpm_path .. "/?/init.lua"
 
-require("config.general")
-require("config.modes")
-require("config.layouts")
-require("config.node_types")
-require("config.functions")
-require("config.hooks")
+require("general")
+require("modes")
+require("layouts")
+require("node_types")
+require("functions")
+-- require("config.hooks")
 
--- ----------------------------------------------------------------------------
--- > Note:
--- >
--- > It's not recommended to copy the entire configuration, unless you want to
--- > freeze it and miss out on useful updates to the defaults.
--- >
--- > Instead, you can use this as a reference to overwrite only the parts you
--- > want to update.
--- >
--- > If you still want to copy the entire configuration, make sure to put your
--- > customization before the return statement.
+os.execute(string.format("[ -e '%s' ] || git clone --depth 1 '%s' '%s'", xpm_path, xpm_url, xpm_path))
+require("xpm").setup({
+	plugins = {
+		-- Let xpm manage itself
+		"dtomvan/xpm.xplr",
+		-- { name = "sayanarijit/command-mode.xplr" },
+		-- { name = "igorepst/context-switch.xplr" },
+		-- { name = "sayanarijit/dual-pane.xplr" },
+		-- { name = "sayanarijit/offline-docs.xplr" },
+		-- { name = "sayanarijit/regex-search.xplr" },
+		-- { name = "sayanarijit/registers.xplr" },
+		-- { name = "sayanarijit/tri-pane.xplr" },
+		-- { name = "sayanarijit/type-to-nav.xplr" },
+		-- { name = "igorepst/term.xplr" },
+		-- { name = "sayanarijit/wl-clipboard.xplr" },
+		-- { name = "sayanarijit/alacritty.xplr" },
+		-- { name = "sayanarijit/dragon.xplr" },
+		-- { name = "sayanarijit/dua-cli.xplr" },
+		-- { name = "sayanarijit/find.xplr" },
+		-- { name = "Junker/nuke.xplr" },
+		-- { name = "sayanarijit/nvim-ctrl.xplr" },
+		-- { name = "dtomvan/ouch.xplr" },
+		-- { name = "dtomvan/paste-rs.xplr" },
+		-- { name = "sayanarijit/preview-tabbed.xplr" },
+		-- { name = "sayanarijit/qrcp.xplr" },
+		-- { name = "sayanarijit/scp.xplr" },
+		-- { name = "sayanarijit/trash-cli.xplr" },
+		-- { name = "sayanarijit/xargs.xplr" },
+		-- { name = "sayanarijit/xclip.xplr" },
+		-- { name = "sayanarijit/zoxide.xplr" },
+		-- { name = "sayanarijit/fzf.xplr" },
+		-- { name = "sayanarijit/map.xplr" },
+		-- { name = "sayanarijit/material-landscape.xplr" },
+		-- { name = "sayanarijit/material-landscape2.xplr" },
+		-- { name = "sayanarijit/zentable.xplr" },
+		{ name = "prncss-xyz/icons.xplr" },
+		-- { name = "dtomvan/extra-icons.xplr" },
+		-- { name = "sayanarijit/tree-view.xplr" },
+		{},
+	},
+	auto_install = true,
+	auto_cleanup = false,
+})
+
+xplr.config.modes.builtin.default.key_bindings.on_key.x = {
+	help = "xpm",
+	messages = {
+		"PopMode",
+		{ SwitchModeCustom = "xpm" },
+	},
+}
+
+-- Custom Commands: 'open'
+-- xplr.config.modes.builtin.default.key_bindings.on_key.o = {
+-- 	help = "$open XPLR_FOCUS_PATH",
+-- 	messages = {
+-- 		{
+-- 			BashExecSilently0 = [===[
+--         PTH="${XPLR_FOCUS_PATH:?}"
+--         open $PTH
+--       ]===],
+-- 		},
+-- 	},
+-- }
+
+-- require("zoxide").setup({
+-- 	mode = "default",
+-- 	key = "Z",
+-- })
+
+require("tri-pane").setup({
+	layout_key = "T", -- In switch_layout mode
+	as_default_layout = true,
+	left_pane_width = { Percentage = 20 },
+	middle_pane_width = { Percentage = 50 },
+	right_pane_width = { Percentage = 30 },
+	left_pane_renderer = custom_function_to_render_left_pane,
+	right_pane_renderer = custom_function_to_render_right_pane,
+})
+
+require("zentable").setup()
+
+require("tree-view").setup({
+	mode = "switch_layout",
+	key = "T",
+
+	-- If you feel slowness, you might want to toggle back to the default view.
+	toggle_layout_mode = "default",
+	toggle_layout_key = "esc",
+
+	-- Press backspace to close all and back and close
+	close_all_and_back_mode = "default",
+	close_all_and_back_key = "backspace",
+
+	-- Toggle expansion without entering
+	toggle_expansion_mode = "default",
+	toggle_expansion_key = "o",
+
+	-- Toggle expansion of all the nodes under pwd
+	toggle_expansion_all_mode = "default",
+	toggle_expansion_all_key = "O",
+
+	-- Focus on the next visible line, not compatible with up/down action
+	focus_next_mode = "default",
+	focus_next_key = "]",
+
+	-- Focus on the previous visible line, not compatible with up/down action
+	focus_prev_mode = "default",
+	focus_prev_key = "[",
+
+	-- Go to the next deep level directory that's open
+	goto_next_open_mode = "default",
+	goto_next_open_key = ")",
+
+	-- Go to the previous deep level directory that's open
+	goto_prev_open_mode = "default",
+	goto_prev_open_key = "(",
+
+	-- Whether to display the tree in full screen
+	fullscreen = false,
+
+	-- Indent for the branches of the tree
+	indent = "  ",
+
+	-- Start xplr with tree view layout
+	as_initial_layout = false,
+
+	-- Disables toggling layout.
+	as_default_layout = false,
+
+	-- Automatically fallback to this layout for better performance if the
+	-- branch contains # of nodes more than the threshold value
+	fallback_layout = "Table",
+	fallback_threshold = 500, -- default: nil (disabled)
+})

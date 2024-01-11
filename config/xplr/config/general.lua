@@ -500,12 +500,13 @@ xplr.config.general.panel_ui.default.borders = {
 -- Type of the borders by default.
 --
 -- Type: nullable [Border Type](https://xplr.dev/en/borders#border-type)
-xplr.config.general.panel_ui.default.border_type = "Rounded"
+xplr.config.general.panel_ui.default.border_type = "Plain"
 
 -- Style of the panel borders by default.
 --
 -- Type: [Style](https://xplr.dev/en/style)
-xplr.config.general.panel_ui.default.border_style = { fg = "DarkGray" }
+-- xplr.config.general.panel_ui.default.border_style = { fg = "DarkGray" }
+xplr.config.general.panel_ui.default.border_style.fg = { Rgb = { 147, 153, 178 } }
 
 -- The content for the table panel title.
 --
