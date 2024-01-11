@@ -7,6 +7,7 @@ local home = os.getenv("HOME")
 local xpm_path = home .. "/.local/share/xplr/dtomvan/xpm.xplr"
 local xpm_url = "https://github.com/dtomvan/xpm.xplr"
 package.path = home .. "/.config/xplr/config/?.lua;" .. home .. "/.config/xplr/?.lua;" .. package.path
+package.path = package.path .. ";" .. home .. "/.config/xplr/config/modes/?.lua;"
 package.path = package.path .. ";" .. home .. "/.config/xplr/plugins/?.lua;"
 package.path = package.path .. ";" .. xpm_path .. "/?.lua;" .. xpm_path .. "/?/init.lua"
 
@@ -87,15 +88,15 @@ xplr.config.modes.builtin.default.key_bindings.on_key.x = {
 -- 	key = "Z",
 -- })
 
-require("tri-pane").setup({
-	layout_key = "T", -- In switch_layout mode
-	as_default_layout = true,
-	left_pane_width = { Percentage = 20 },
-	middle_pane_width = { Percentage = 50 },
-	right_pane_width = { Percentage = 30 },
-	left_pane_renderer = custom_function_to_render_left_pane,
-	right_pane_renderer = custom_function_to_render_right_pane,
-})
+-- require("tri-pane").setup({
+-- 	layout_key = "T", -- In switch_layout mode
+-- 	as_default_layout = true,
+-- 	left_pane_width = { Percentage = 20 },
+-- 	middle_pane_width = { Percentage = 50 },
+-- 	right_pane_width = { Percentage = 30 },
+-- 	left_pane_renderer = custom_function_to_render_left_pane,
+-- 	right_pane_renderer = custom_function_to_render_right_pane,
+-- })
 
 require("zentable").setup()
 

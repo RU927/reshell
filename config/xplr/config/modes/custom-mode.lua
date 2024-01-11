@@ -1,0 +1,32 @@
+---@diagnostic disable
+local xplr = xplr -- The globally exposed configuration to be overridden.
+---@diagnostic enable
+
+-- This is where you define custom modes.
+--
+-- Type: mapping of the following key-value pairs:
+--
+-- * key: string
+-- * value: [Mode](https://xplr.dev/en/mode)
+--
+-- Example:
+--
+-- ```lua
+-- xplr.config.modes.custom.example = {
+--   name = "example",
+--   key_bindings = {
+--     on_key = {
+--       enter = {
+--         help = "default mode",
+--         messages = {
+--           "PopMode",
+--           { SwitchModeBuiltin = "default" },
+--         },
+--       },
+--     },
+--   },
+-- }
+--
+-- xplr.config.general.initial_mode = "example"
+-- ```
+xplr.config.modes.custom = {}
