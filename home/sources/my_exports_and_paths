@@ -139,7 +139,7 @@ done
 # 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
 # done
 
-my_repo=("inst" "shell" "run" "net")
+my_repo=("inst" "shell" "run" "net" "paenlare")
 for r in "${my_repo[@]}"; do
 	[[ -d "$GIT_HOME/re_$r" ]] && eval DOT_"$r"="$GIT_HOME/re_$r" && export DOT_"$r"
 	if [ -d "$GIT_HOME/re_$r"/bin ]; then
