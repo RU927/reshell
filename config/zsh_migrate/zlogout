@@ -4,10 +4,6 @@
 # должны выполняться только в оболочках входа в систему.  Он должен использоваться для запуска
 # серии внешних команд (fortune, msgs и т. д.).
 
-FORTUNE="/usr/games/fortune"
-FORTUNE_OPTS="-s"
-COWSAY="/usr/local/bin/cowsay"
-
 # Сброс и очистка выполняются только на физической консоли.
 if [ ! $DISPLAY ]; then
 	if [ ! $SSH_CLIENT ]; then
@@ -18,13 +14,3 @@ fi
 # Очистите экран, чтобы следующий пользователь не смог увидеть ничего из сеанса.
 clear 
 
-# Только для обычного пользователя в консоли, заставьте корову назвать состояние *g*
-if [ "$UID" != 0 ] && [ ! "${DISPLAY}" ]; then
-	if [ -x ${COWSAY} ]; then
-		if [ -x ${FORTUNE} ]; then
-			${FORTUNE} ${FORTUNE_OPTS} | ${COWSAY} -nW80; echo
-		fi
-	elif [ -x ${FORTUNE} ]; then
-		${FORTUNE} ${FORTUNE_OPTS}; echo
-	fi
-fi
