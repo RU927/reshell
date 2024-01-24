@@ -122,22 +122,6 @@ export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 GIT_HOME=$HOME/REPOS
 export GIT_HOME
 
-DOT_SHELL=$GIT_HOME/re_shell
-# BIN_SHELL=$DOT_SHELL/bin
-SHELLSOURCE=$DOT_SHELL/home/sources
-
-my_sourses=("aliases" "zsh_prompt")
-
-for m in "${my_sourses[@]}"; do
-	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
-done
-
-# Test and then source exported variables.
-# my_array=("exports" "options" "aliases" "functions" "zle" "bindings" "compctl" "style" "misc" "paths" "prompt")
-#
-# for m in "${my_array[@]}"; do
-# 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
-# done
 
 my_repo=("inst" "shell" "run" "net" "paenlare")
 for r in "${my_repo[@]}"; do

@@ -18,12 +18,30 @@ if (( EUID == 0 )); then
     umask 113
 fi
 
-ZDOTDIR=${ZDOTDIR:-${HOME}}
+# ZDOTDIR=${ZDOTDIR:-${HOME}}
 # ZSHDDIR="${HOME}/.config/zsh"
-ZSHDDIR="${ZDOTDIR}/.zsh"
-HISTFILE="${ZDOTDIR}/.zsh_history"
+
+
+HISTFILE="${HOME}/.zsh_history"
 HISTSIZE='128000'
 SAVEHIST='128000'
+
+DOT_SHELL=$GIT_HOME/re_shell
+# SHELLSOURCE=$DOT_SHELL/home/sources
+SHELLSOURCE=$ZSHDDIR
+
+my_sourses=("aliases" "zsh_prompt")
+
+for m in "${my_sourses[@]}"; do
+	[[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
+done
+
+# Test and then source exported variables.
+# my_array=("exports" "options" "aliases" "functions" "zle" "bindings" "compctl" "style" "misc" "paths" "prompt")
+#
+# for m in "${my_array[@]}"; do
+# 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
+# done
 
 # Le features!
 # extended globbing, awesome!

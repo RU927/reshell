@@ -65,10 +65,40 @@ setup_git_prompt() {
 
 }
 
+prompt_nvm() {
+  local fnm_default
+  fnm_default=$(fnm list | grep default | awk '{ print $2 }') || return
+  local fnm_current=$(fnm current)
+  [[ $fnm_default != $fnm_current ]] || return
+  
+  # nvm_prompt=" %F{blue}[%F{253}${fnm_current}%F{blue}]"
+  nvm_prompt=" ${fnm_current}"
+}
+# subshell count
+if [[ -z $ORIG_SHLVL ]]; then
+	export ORIG_SHLVL=$SHLVL
+fi
+if [[ $SHLVL -gt $ORIG_SHLVL ]]; then
+	# preprompt_parts+=("%F{yellow}[$(($SHLVL - $ORIG_SHLVL))]%f")
+	deeps=("%F{cyan}[%F{purple}$(($SHLVL - $ORIG_SHLVL))%F{cyan}]%f")
+fi
+
+if [ -n "$GUIX_ENVIRONMENT" ]; then
+  guix_prompt="%F{cyan}[%F{purple}guix%F{cyan}] "
+fi
+# nix shell
+NIXSHELL=$(echo $PATH | tr ':' '\n' | grep '/nix/store' | sed 's#^/nix/store/[a-z0-9]\+-##' | \
+sed 's#-[^-]\+$##' | xargs -n2 -d'\n')
+
+if [ "$NIXSHELL" ]; then
+  nix_prompt="%F{cyan}[%F{purple}nix: %F{253}$NIXSHELL%F{cyan}] "
+fi
+
+
+
 precmd() {
     # Set terminal title.
     termtitle precmd
-
     # Set optional git part of prompt.
     setup_git_prompt
 }
@@ -96,13 +126,15 @@ fi
 
 case $USER in
     root)
-        PROMPT='%B%F{cyan}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{blue}%1~${git_prompt}%F{blue} %# %b%f%k'
+        PROMPT='%B%F{red}%n%B%F{reset_color}*%B%F{yellow}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{green}%1~${git_prompt}%F{blue} %B%F{red}%# %b%f%k'
+
+        RPROMPT='%B%F{red}%n %B%F{green}%~'
     ;;
 
     *)  
         # PROMPT='%B%F{blue}%n@%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{cyan}%1~${git_prompt}%F{cyan} %# %b%f%k'
         PROMPT='%B%F{red}%n%B%F{reset_color}*%B%F{blue}%m%k %(?..%F{blue}[%F{253}%?%F{blue}] )${prompt_is_ssh}%B%F{yellow}%1~${git_prompt}%F{cyan} '
-        RPROMPT='%B%F{yellow}%~'
+        RPROMPT='${deeps} ${guix_prompt}${nix_prompt}%B%F{yellow}%~'
 
     ;;
 esac

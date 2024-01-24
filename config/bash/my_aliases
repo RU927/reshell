@@ -271,10 +271,10 @@ alias ,ev='$EDITOR $DOT_INST/home/vimrc'
 alias ,ma='$EDITOR $SHELLSOURCE/my_aliases'
 alias ,mb='$EDITOR $SHELLSOURCE/bashrc'
 alias ,mc='$EDITOR $SHELLSOURCE/my_completions'
-alias ,me='$EDITOR $SHELLSOURCE/my_ex_paths'
+alias ,me='$EDITOR $SHELLSOURCE/my_exports_and_paths'
 alias ,mf='$EDITOR $SHELLSOURCE/my_functions'
-alias ,mp='$EDITOR $SHELLSOURCE/my_zsh_prompt'
-alias ,mt='$EDITOR $SHELLSOURCE/my_prompt'
+alias ,mzp='$EDITOR $SHELLSOURCE/my_zsh_prompt'
+alias ,mbp='$EDITOR $SHELLSOURCE/my_bash_prompt'
 
 alias ,mz='$EDITOR $DOT_SHELL/home/zshrc'
 
