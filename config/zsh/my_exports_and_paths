@@ -82,7 +82,7 @@ appendToPath "$GOBIN"
 
 ## Python Environment Manager
 export CONDA_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/miniconda3"
-export CONDARC="$HOME/.condarc"
+export CONDARC="${XDG_CONFIG_HOME:-$HOME/.config}/conda/.condarc"
 case "${OSTYPE}" in
 linux*) CONDA_PREFIX="$CONDA_ROOT" ;;
 darwin*) CONDA_PREFIX="" ;;
@@ -121,7 +121,6 @@ export NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
 
 GIT_HOME=$HOME/REPOS
 export GIT_HOME
-
 
 my_repo=("inst" "shell" "run" "net" "paenlare")
 for r in "${my_repo[@]}"; do
@@ -264,6 +263,7 @@ fi
 # {{{ Editor.
 
 export MANWIDTH=76
+
 if programExists nvim; then
 	EDITOR=$(which nvim)
 elif programExists lvim; then

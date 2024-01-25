@@ -17,7 +17,7 @@ fileExists() {
 # {{{ A check for the host name.
 
 hostName() {
-	[[ ${HOSTNAME} =~ "$1" ]]
+	[[ ${HOSTNAME} = "$1" ]]
 }
 
 # -------------------------------------------------------------------------- }}}
@@ -31,7 +31,7 @@ programExists() {
 # {{{ A check for the operating system type.
 
 osType() {
-	[[ ${OSTYPE} =~ "$1" ]]
+	[[ ${OSTYPE} = "$1" ]]
 }
 
 # -------------------------------------------------------------------------- }}}
@@ -71,18 +71,14 @@ appendToManPath() {
 }
 
 # -------------------------------------------------------------------------- }}}
-# {{{ Set terminal title.
-
-title() { echo -n -e "\033]0;$1\007"; }
-
-# -------------------------------------------------------------------------- }}}
 # {{{ Generating a new SSH key and adding it to the ssh-agent
 #     https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
+SSHHOME="$HOME/.ssh"
 sshkeys() {
-	if [[ -d $SSHHOME ]]; then
+	if [[ -d ${SSHHOME} ]]; then
 		eval "$(ssh-agent -s)"
-		for key in $(ls $SSHHOME/*.pub); do
+		for key in $(command ls "$SSHHOME"/*.pub); do
 			ssh-add -q "${key%.*}"
 		done
 	fi
@@ -101,8 +97,8 @@ sshkill() {
 }
 
 latexmkkill() {
-	for pid in $(ps aux | awk '/latexmk/ {print $2}'); do kill -9 $pid; done
-	for pid in $(ps aux | awk '/perl/    {print $2}'); do kill -9 $pid; done
+	for pid in $(ps aux | awk '/latexmk/ {print $2}'); do kill -9 "$pid"; done
+	for pid in $(ps aux | awk '/perl/    {print $2}'); do kill -9 "$pid"; done
 }
 
 sshstart() {
@@ -118,41 +114,10 @@ sshstop() {
 }
 
 # -------------------------------------------------------------------------- }}}
-# {{{ main moves me to main and shows me a few commits.
-
-br() {
-	git co $1
-}
-
-main() {
-	br main
-	clear
-	git logg -15
-}
-
-# -------------------------------------------------------------------------- }}}
-# {{{ Grep my history for a prior command I used.
-
-hg() {
-	history | grep "$1"
-}
-
-# -------------------------------------------------------------------------- }}}
-# {{{ cj & gh are functions that I rewrite all the time to simplify my life.
-
-cj() {
-	newdoc --dir=$1/$2 --file=$2 --title=$2 $3 $4
-}
-
-dh() {
-	clear && docbld clobber && docbld texx && ll && zathura $1
-}
-
-# -------------------------------------------------------------------------- }}}
 # {{{ Use LaTeX make to generate a document.
 
 pdf() {
-	latexmk -pdf -verbose -file-line-error -synctex=1 -interaction=nonstopmode -cd $1
+	latexmk -pdf -verbose -file-line-error -synctex=1 -interaction=nonstopmode -cd "$1"
 }
 
 # -------------------------------------------------------------------------- }}}
@@ -162,22 +127,22 @@ pdf() {
 # usage: ex <file>
 
 ex() {
-	if [ -f $1 ]; then
-		case $1 in
-		*.tar.bz2) tar xjf $1 ;;
-		*.tar.gz) tar xzf $1 ;;
-		*.bz2) bunzip2 $1 ;;
-		*.rar) unrar x $1 ;;
-		*.gz) gunzip $1 ;;
-		*.tar) tar xf $1 ;;
-		*.tbz2) tar xjf $1 ;;
-		*.tgz) tar xzf $1 ;;
-		*.zip) unzip $1 ;;
-		*.Z) uncompress $1 ;;
-		*.7z) 7z x $1 ;;
-		*deb) ar x $1 ;;
-		*.tar.xz) tar xf $1 ;;
-		*.tar.zst) unzstd $1 ;;
+	if [ -f "$1" ]; then
+		case "$1" in
+		*.tar.bz2) tar xjf "$1" ;;
+		*.tar.gz) tar xzf "$1" ;;
+		*.bz2) bunzip2 "$1" ;;
+		*.rar) unrar x "$1" ;;
+		*.gz) gunzip "$1" ;;
+		*.tar) tar xf "$1" ;;
+		*.tbz2) tar xjf "$1" ;;
+		*.tgz) tar xzf "$1" ;;
+		*.zip) unzip "$1" ;;
+		*.Z) uncompress "$1" ;;
+		*.7z) 7z x "$1" ;;
+		*deb) ar x "$1" ;;
+		*.tar.xz) tar xf "$1" ;;
+		*.tar.zst) unzstd "$1" ;;
 		*) echo "'$1' cannot be extracted via ex()" ;;
 		esac
 	else
@@ -187,39 +152,30 @@ ex() {
 
 # -------------------------------------------------------------------------- }}}
 
-man() {
-	env \
-		LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-		LESS_TERMCAP_md=$(printf "\e[1;36m") \
-		LESS_TERMCAP_me=$(printf "\e[0m") \
-		LESS_TERMCAP_se=$(printf "\e[0m") \
-		LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-		LESS_TERMCAP_ue=$(printf "\e[0m") \
-		LESS_TERMCAP_us=$(printf "\e[1;32m") \
-		PAGER="${commands[less]:-$PAGER}" \
-		NROFF_U=1 \
-		PATH="$HOME/bin:$PATH" \
-		man "$@"
+# man() {
+# 	env \
+# 		LESS_TERMCAP_mb="$(printf "\e[1;31m")" \
+# 		LESS_TERMCAP_md="$(printf "\e[1;36m")" \
+# 		LESS_TERMCAP_me="$(printf "\e[0m")" \
+# 		LESS_TERMCAP_se="$(printf "\e[0m")" \
+# 		LESS_TERMCAP_so="$(printf "\e[1;44;33m")" \
+# 		LESS_TERMCAP_ue="$(printf "\e[0m")" \
+# 		LESS_TERMCAP_us="$(printf "\e[1;32m")" \
+# 		PAGER="${commands[less]:-$PAGER}" \
+# 		NROFF_U=1 \
+# 		PATH="$HOME/bin:$PATH" \
+# 		man "$@"
+# }
 
-	# Color for manpages in less makes manpages a little easier to read
-	# export LESS_TERMCAP_mb=$'\E[01;31m'
-	# export LESS_TERMCAP_md=$'\E[01;31m'
-	# export LESS_TERMCAP_me=$'\E[0m'
-	# export LESS_TERMCAP_se=$'\E[0m'
-	# export LESS_TERMCAP_so=$'\E[01;44;33m'
-	# export LESS_TERMCAP_ue=$'\E[0m'
-	# export LESS_TERMCAP_us=$'\E[01;32m'
-	#
-
-}
+# export LESS_TERMCAP_mb=$'\E[01;31m'
+# export LESS_TERMCAP_md=$'\E[01;31m'
+# export LESS_TERMCAP_me=$'\E[0m'
+# export LESS_TERMCAP_se=$'\E[0m'
+# export LESS_TERMCAP_so=$'\E[01;44;33m'
+# export LESS_TERMCAP_ue=$'\E[0m'
+# export LESS_TERMCAP_us=$'\E[01;32m'
 
 # Only show files which have $1 present in contents
-faz() {
-	local line
-	line=$(rg "$1" | fzf) &&
-		$EDITOR $(cut -d':' -f1 <<<"$line") +$(cut -d':' -f2 <<<"$line")
-}
-
 fz() {
 	local line
 	line=$(rg "$1" | fzf) &&
@@ -234,7 +190,7 @@ todos() {
 
 unLock() {
 	for pid in $(ps aux | awk 'apt {print $2}'); do
-		kill -9 $pid
+		kill -9 "$pid"
 	done
 }
 # 	sudo lsof /var/lib/dpkg/lock
@@ -252,33 +208,23 @@ unLock() {
 # 	sudo dpkg --configure -a
 # }
 
-#######################################################
-# SPECIAL FUNCTIONS
-#######################################################
-
 # Use the best version of pico installed
 edit() {
-	if [ "$(type -t jpico)" = "file" ]; then
-		# Use JOE text editor http://joe-editor.sourceforge.net/
-		jpico -nonotice -linums -nobackups "$@"
+	if [ "$(type -t nvim)" = "file" ]; then
+		nvim "$@"
 	elif [ "$(type -t nano)" = "file" ]; then
 		nano -c "$@"
 	elif [ "$(type -t pico)" = "file" ]; then
 		pico "$@"
-	else
-		nvim "$@"
 	fi
 }
-sedit() {
-	if [ "$(type -t jpico)" = "file" ]; then
-		# Use JOE text editor http://joe-editor.sourceforge.net/
-		sudo jpico -nonotice -linums -nobackups "$@"
+sv() {
+	if [ "$(type -t nvim)" = "file" ]; then
+		sudo -Es nvim "$@"
 	elif [ "$(type -t nano)" = "file" ]; then
 		sudo nano -c "$@"
 	elif [ "$(type -t pico)" = "file" ]; then
 		sudo pico "$@"
-	else
-		sudo nvim "$@"
 	fi
 }
 
@@ -287,17 +233,17 @@ extract() {
 	for archive in "$@"; do
 		if [ -f "$archive" ]; then
 			case $archive in
-			*.tar.bz2) tar xvjf $archive ;;
-			*.tar.gz) tar xvzf $archive ;;
-			*.bz2) bunzip2 $archive ;;
-			*.rar) rar x $archive ;;
-			*.gz) gunzip $archive ;;
-			*.tar) tar xvf $archive ;;
-			*.tbz2) tar xvjf $archive ;;
-			*.tgz) tar xvzf $archive ;;
-			*.zip) unzip $archive ;;
-			*.Z) uncompress $archive ;;
-			*.7z) 7z x $archive ;;
+			*.tar.bz2) tar xvjf $"archeve" ;;
+			*.tar.gz) tar xvzf $"archeve" ;;
+			*.bz2) bunzip2 $"archeve" ;;
+			*.rar) rar x $"archeve" ;;
+			*.gz) gunzip $"archeve" ;;
+			*.tar) tar xvf $"archeve" ;;
+			*.tbz2) tar xvjf $"archeve" ;;
+			*.tgz) tar xvzf $"archeve" ;;
+			*.zip) unzip $"archeve" ;;
+			*.Z) uncompress $"archeve" ;;
+			*.7z) 7z x $"archeve" ;;
 			*) echo "don't know how to extract '$archive'..." ;;
 			esac
 		else
@@ -318,30 +264,10 @@ ftext() {
 	grep -iIHrn --color=always "$1" . | less -r
 }
 
-# Copy file with a progress bar
-# cpp() {
-# 	set -e
-# 	strace -q -ewrite cp -- "${1}" "${2}" 2>&1 |
-# 		awk '{
-# 	count += $NF
-# 	if (count % 10 == 0) {
-# 		percent = count / total_size * 100
-# 		printf "%3d%% [", percent
-# 		for (i=0;i<=percent;i++)
-# 			printf "="
-# 			printf ">"
-# 			for (i=percent;i<100;i++)
-# 				printf " "
-# 				printf "]\r"
-# 			}
-# 		}
-# 	END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
-# }
-
 # Copy and go to the directory
 cpg() {
 	if [ -d "$2" ]; then
-		cp "$1" "$2" && cd "$2"
+		cp "$1" "$2" && cd "$2" || exit
 	else
 		cp "$1" "$2"
 	fi
@@ -350,16 +276,16 @@ cpg() {
 # Move and go to the directory
 mvg() {
 	if [ -d "$2" ]; then
-		mv "$1" "$2" && cd "$2"
+		mv "$1" "$2" && cd "$2" || exit
 	else
 		mv "$1" "$2"
 	fi
 }
 
 # Create and go to the directory
-mkdirg() {
+mkg() {
 	mkdir -p "$1"
-	cd "$1"
+	cd "$1" || exit
 }
 
 # Goes up a specified number of directories  (i.e. up 4)
@@ -373,7 +299,7 @@ up() {
 	if [ -z "$d" ]; then
 		d=..
 	fi
-	cd $d
+	cd "$d" || exit
 }
 
 #Automatically do an ls after each cd
@@ -391,164 +317,54 @@ pwdtail() {
 	pwd | awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
 }
 
-# Show current network information
-
+##Show current network information
 if [ "$HOST" = vaio ]; then
 	radio_adapter=wlp7s0
+	lan_adapter=enp19s0
 elif [ "$HOST" = pcRU ]; then
 	radio_adapter=wlx60e32716669c
 	lan_adapter=enp2s0
 fi
 
-my_adapter=("$lan_adapter" "$radio_adapter")
+adapters=("$lan_adapter" "$radio_adapter")
 
+# adapters="$(ip -o a s | awk '$3 == "inet" && $2 != "lo" {print $2}')"
+# adapters="$(command ls /sys/class/net | grep -Ev "^lo$")"
 netinfo() {
 	echo "--------------- Network Information ---------------"
-	for m in "${my_adapter[@]}"; do
+	for m in "${adapters[@]}"; do
 		echo "$m"
-		echo ""
+		# echo ""
 		/sbin/ifconfig "$m" | awk /'inet / {print "IPV4: " $2}'
-		echo ""
+		# echo ""
 		/sbin/ifconfig "$m" | awk /'broadcast / {print "BROADCAST: " $6}'
-		echo ""
+		# echo ""
 		/sbin/ifconfig "$m" | awk /'inet / {print "NETMASK: " $4}'
-		echo ""
+		# echo ""
 		/sbin/ifconfig "$m" | awk /'ether / {print "MAC: " $2}'
-		# $ ifconfig -a | awk '/HWaddr/ {print "Interface: " $1 "\t MAC: " $NF}'
+		# /sbin/ip link show "$m" | awk /'ether / {print "MAC: " $2 "\t " $4}'
 		echo "---------------------------------------------------"
 	done
-
-	# echo "--------------- Network Information ---------------"
-	# /sbin/ifconfig | awk /'inet / {print "IPV4: " $2}'
-	# echo ""
-	# /sbin/ifconfig | awk /'broadcast / {print "BROADCAST: " $6}'
-	# echo ""
-	# /sbin/ifconfig | awk /'inet / {print "NETMASK: " $4}'
-	# echo ""
-	# /sbin/ip link | awk /'ether / {print "MAC: " $2 "\t " $4}'
-	# # $ ifconfig -a | awk '/HWaddr/ {print "Interface: " $1 "\t MAC: " $NF}'
-	#
-	# echo "---------------------------------------------------"
 }
 
 # IP address lookup
-alias whatismyip="whatsmyip"
-
-function whatsmyip() {
-	# Dumps a list of all IP addresses for every device
-	# /sbin/ifconfig |grep -B1 "inet addr" |awk '{ if ( $1 == "inet" ) { print $2 } else if ( $2 == "Link" ) { printf "%s:" ,$1 } }' |awk -F: '{ print $1 ": " $3 }';
-	for m in "${my_adapter[@]}"; do
-		echo ""
+function whatismyip() {
+	echo "--------------- Network Information ---------------"
+	for m in "${adapters[@]}"; do
 		echo "$m"
 		echo -n "Internal IP: "
-		# ip -4 -o addr show "$m" | awk '{print $4}'
 		ip -4 -o addr show "$m" | awk '{print $4}' | cut -d "/" -f 1
-		echo ""
+		echo "---------------------------------------------------"
 	done
 	echo -n "External IP: "
-	# wget http://smart-ip.net/myip -O - -q
 	dig @resolver4.opendns.com myip.opendns.com +short
-
-	# #all ipv4
-	# hostname --all-ip-addresses | awk '{print $1}'
-	# #all ipv6
-	# hostname --all-ip-addresses | awk '{print $2}'
-	# #получает IPv4-адрес для любого интерфейса, используемого для подключения к указанному удаленному хосту
-	# # ip route get 8.8.8.8 | awk '{ print $NF; exit }'
-	# ip route get 8.8.8.8 | awk '{ print $7; exit }'
-	# # все имена устройств Ethernet и назначенный им IP-адрес,
-	# ip --oneline addr show
-	# ip -o a s | awk '$3 == "inet" && $2 != "lo" {print $2 ": " $4}' | sed 's/\/.*//'
-	# # имена всех сетевых интерфейсов
-	# ip a s | awk -F: '/^[^ ]/ {print $2}'
-
+	echo "---------------------------------------------------"
+	##wget http://smart-ip.net/myip -O - -q
 }
 
-# View Apache logs
-apachelog() {
-	if [ -f /etc/httpd/conf/httpd.conf ]; then
-		cd /var/log/httpd && ls -xAh && multitail --no-repeat -c -s 2 /var/log/httpd/*_log
-	else
-		cd /var/log/apache2 && ls -xAh && multitail --no-repeat -c -s 2 /var/log/apache2/*.log
-	fi
-}
-
-# Edit the Apache configuration
-apacheconfig() {
-	if [ -f /etc/httpd/conf/httpd.conf ]; then
-		sedit /etc/httpd/conf/httpd.conf
-	elif [ -f /etc/apache2/apache2.conf ]; then
-		sedit /etc/apache2/apache2.conf
-	else
-		echo "Error: Apache config file could not be found."
-		echo "Searching for possible locations:"
-		sudo updatedb && locate httpd.conf && locate apache2.conf
-	fi
-}
-
-# Edit the PHP configuration file
-phpconfig() {
-	if [ -f /etc/php.ini ]; then
-		sedit /etc/php.ini
-	elif [ -f /etc/php/php.ini ]; then
-		sedit /etc/php/php.ini
-	elif [ -f /etc/php5/php.ini ]; then
-		sedit /etc/php5/php.ini
-	elif [ -f /usr/bin/php5/bin/php.ini ]; then
-		sedit /usr/bin/php5/bin/php.ini
-	elif [ -f /etc/php5/apache2/php.ini ]; then
-		sedit /etc/php5/apache2/php.ini
-	else
-		echo "Error: php.ini file could not be found."
-		echo "Searching for possible locations:"
-		sudo updatedb && locate php.ini
-	fi
-}
-
-# Edit the MySQL configuration file
-mysqlconfig() {
-	if [ -f /etc/my.cnf ]; then
-		sedit /etc/my.cnf
-	elif [ -f /etc/mysql/my.cnf ]; then
-		sedit /etc/mysql/my.cnf
-	elif [ -f /usr/local/etc/my.cnf ]; then
-		sedit /usr/local/etc/my.cnf
-	elif [ -f /usr/bin/mysql/my.cnf ]; then
-		sedit /usr/bin/mysql/my.cnf
-	elif [ -f ~/my.cnf ]; then
-		sedit ~/my.cnf
-	elif [ -f ~/.my.cnf ]; then
-		sedit ~/.my.cnf
-	else
-		echo "Error: my.cnf file could not be found."
-		echo "Searching for possible locations:"
-		sudo updatedb && locate my.cnf
-	fi
-}
-
-# For some reason, rot13 pops up everywhere
-rot13() {
-	if [ $# -eq 0 ]; then
-		tr '[a-m][n-z][A-M][N-Z]' '[n-z][a-m][N-Z][A-M]'
-	else
-		echo $* | tr '[a-m][n-z][A-M][N-Z]' '[n-z][a-m][N-Z][A-M]'
-	fi
-}
-
-# Trim leading and trailing spaces (for scripts)
-trim() {
-	local var=$*
-	var="${var#"${var%%[![:space:]]*}"}" # remove leading whitespace characters
-	var="${var%"${var##*[![:space:]]}"}" # remove trailing whitespace characters
-	echo -n "$var"
-}
 # GitHub Titus Additions
 
-gcom() {
-	git add .
-	git commit -m "$1"
-}
-lazyg() {
+gcomp() {
 	git add .
 	git commit -m "$1"
 	git push
@@ -556,39 +372,23 @@ lazyg() {
 
 #######
 
-setvenv() {
-	if [[ ! -d "$1" ]]; then
-		python3 -m venv "$1"
-	fi
+setEnv() {
+	[[ -d "$1" ]] || python3 -m venv "$1"
 	source "$1"/bin/activate
-	if fileExists requirements.txt; then
-		pip install -r requirements.txt
-	fi
+	[[ -f requirements.txt ]] && pip install -r requirements.txt
 }
 
-set_venv() {
-	if dirExists "$1"; then
-		source "$1"/bin/activate
-	else
-		python3 -m venv "$1"
-		source "$1"/bin/activate
-	fi
-	if fileExists requirements.txt; then
-		pip install -r requirements.txt
-	fi
-}
-
-pyVenv() {
+pyEnv() {
 	if [ $# -eq 0 ]; then # Для работы скрипта необходим входной параметр.
 		echo "Вызовите сценарий с номером версии: 3.x.y "
 	fi
 
-	PyVenvDir=$(pwd)
-	PyVersionDir=$HOME/.localpython/"$1"
-	PyBinDir=$PyVersionDir/bin
+	PyEnvDir=$(pwd)
+	PyVersionDir=$XDG_DATA_HOME/python/$1
 	PySrcDir=$PyVersionDir
+	PyBinDir=$PyVersionDir/bin
 	PyVersion=python"${1%.*}"
-	PyVenvName=venv"$1" #ошибка,если не venv в 3.6.9; в 3.5.7, 3.9.1 - норм
+	PyEnvName=venv"$1" #ошибка,если не venv в 3.6.9; в 3.5.7, 3.9.1 - норм
 
 	if [[ ! -d $PyVersionDir ]]; then
 		mkdir -p "$PyVersionDir"
@@ -598,24 +398,24 @@ pyVenv() {
 		mkdir -p "$PySrcDir"
 	fi
 	if [[ ! -d $PyBinDir ]]; then
-		cd "$PySrcDir"
+		cd "$PySrcDir" || exit
 		wget http://www.python.org/ftp/python/"$1"/Python-"$1".tgz
 		tar -zxvf Python-"$1".tgz
 		rm -rf Python-"$1".tgz
-		cd Python-"$1"
+		cd Python-"$1" || exit
 		./configure --prefix="$PyVersionDir"
 		make
 		make install
-		cd "$PyVenvDir"
+		cd "$PyEnvDir" || exit
 	fi
-	# if [[ ! -d $PyVenvName ]]; then
-	"$PyBinDir"/"$PyVersion" -m venv "$PyVenvName"
+	# if [[ ! -d $PyEnvName ]]; then
+	"$PyBinDir"/"$PyVersion" -m venv "$PyEnvName"
 	# fi
 
-	source "$PyVenvName"/bin/activate
+	source "$PyEnvName"/bin/activate
 }
 
-fzf-surfraw() { surfraw "$(cat ~/.config/surfraw/bookmarks | sed '/^$/d' | sort -n | fzf -e)"; }
+fzf-surfraw() { surfraw "$(command cat ~/.config/surfraw/bookmarks | sed '/^$/d' | sort -n | fzf -e)"; }
 
 # start fuzzy finder frontend to greenclip
 fzf-clipboard() { echo -n "$(greenclip print | fzf -e -i)" | xclip -selection clipboard; }
@@ -639,78 +439,6 @@ derez-greenclip() {
 # functions in zshrc
 #
 # Functions
-
-# Fancy cd that can cd into parent directory, if trying to cd into file.
-# useful with ^F fuzzy searcher.
-cd() {
-	if (($ + 2)); then
-		builtin cd "$@"
-		return 0
-	fi
-
-	if [ -f "$1" ]; then
-		echo "${yellow}cd ${1:h}${NC}" >&2
-		builtin cd "${1:h}"
-		ls -l "$1"
-	else
-		builtin cd "${@}"
-	fi
-}
-
-over_ssh() {
-	if [ -n "${SSH_CLIENT}" ]; then
-		return 0
-	else
-		return 1
-	fi
-}
-
-reload() {
-	exec "${SHELL}" "$@"
-}
-
-# startx() {
-# 	exec=startx "$@"
-# }
-
-man() {
-	if command -v vimmanpager >/dev/null 2>&1; then
-		PAGER="vimmanpager" command man "$@"
-	else
-		command man "$@"
-	fi
-}
-
-confirm() {
-	local answer
-	echo -ne "zsh: sure you want to run '${YELLOW}$*${NC}' [yN]? "
-	read -q answer
-	echo
-	if [[ "${answer}" =~ ^[Yy]$ ]]; then
-		command "${@}"
-	else
-		return 1
-	fi
-}
-
-confirm_wrapper() {
-	if [ "$1" = '--root' ]; then
-		local as_root='true'
-		shift
-	fi
-
-	local prefix=''
-
-	if [ "${as_root}" = 'true' ] && [ "${USER}" != 'root' ]; then
-		prefix="sudo"
-	fi
-	confirm ${prefix} "$@"
-}
-
-# poweroff() { confirm_wrapper --root $0 "$@"; }
-# reboot() { confirm_wrapper --root $0 "$@"; }
-# hibernate() { confirm_wrapper --root $0 "$@"; }
-
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 run_under_tmux() {
@@ -757,9 +485,9 @@ alias csv="view_csv"
 
 yt() {
 	if programExists yt-dlp; then
-		yt-dlp -o - $1 | mpv -
+		yt-dlp -o - "$1" | mpv -
 	elif programExists youtube-dl; then
-		youtube-dl -o - $1 | mpv -
+		youtube-dl -o - "$1" | mpv -
 	else
 		echo "no-no"
 	fi
