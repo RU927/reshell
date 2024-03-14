@@ -318,15 +318,18 @@ pwdtail() {
 }
 
 ##Show current network information
-if [ "$HOST" = vaio ]; then
-	radio_adapter=wlp7s0
-	lan_adapter=enp19s0
-elif [ "$HOST" = pcRU ]; then
-	radio_adapter=wlx60e32716669c
-	lan_adapter=enp2s0
-fi
+# if [ "$HOST" = vaio ]; then
+# 	radio_adapter=wlp7s0
+# 	lan_adapter=enp19s0
+# elif [ "$HOST" = pcRU ]; then
+# 	radio_adapter=wlx60e32716669c
+# 	lan_adapter=enp2s0
+# fi
+#
+# adapters=("$lan_adapter" "$radio_adapter")
 
-adapters=("$lan_adapter" "$radio_adapter")
+source $BIN_net/check_adapters_new.sh
+adapters=("$lan_list" "$wan_list")
 
 # adapters="$(ip -o a s | awk '$3 == "inet" && $2 != "lo" {print $2}')"
 # adapters="$(command ls /sys/class/net | grep -Ev "^lo$")"
