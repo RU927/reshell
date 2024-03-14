@@ -63,7 +63,8 @@ for i in $listFonts; do
 	    echo "$i font unziping started" &&
 	    #Unzipe the downloaded archive
 	    # unzip -qq "$downDir/$i.zip" -d "$distDir" &&
-            unzip -qq "$i.zip" -d "$distDir" &&
+            # unzip -qq "$i.zip" -d "$distDir" &&
+      unzip -qq "$i.zip" -d "$distDir/$i" &&
 	    echo "$i font unzipping finished" &&
 	    echo "Font $i Installed" &&
 	    installedFontName=$(curl --silent "$nerdfontsrepo/contents/patched-fonts/$i/Regular/complete?ref=master" | \
@@ -95,7 +96,7 @@ if [ "$aFontInstalled" = "True" ]; then
     #check if the user hasn't chooen to keep the updated, if not, remove them
     if [ "$keepArchives" = "False" ]; then
         echo "Removing zip font files in $downDir" &&
-	rm $downDir/*.zip
+	rm "$downDir"/*.zip
     else
 	echo "The archive files are in $downDir"
     fi
