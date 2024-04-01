@@ -1,11 +1,23 @@
 #!/bin/sh
-sudo snap remove lxd
-sudo snap remove core20
-sudo snap remove snapd
+
+list=$(snap list | grep -Ev "bare|core20|snapd" )
+sudo snap remove $list
+
+sudo snap remove bare core20 snapd
 # df | grep snapd
 # sudo umount /snap/snapd/14978
 # or
 # sudo umount /var/snap
-sudo snap remove snapd
-sudo apt purge snapd
 
+sudo systemctl stop snapd
+sudo systemctl disable snapd
+sudo systemctl mask snapd
+
+sudo apt purge snapd -y
+sudo apt-mark hold snapd
+
+cat <<EOF >/etc/apt/preferences.d/nosnap.pref
+Package: snapd
+Pin: release a=*
+Pin-Priority: -10
+EOF
