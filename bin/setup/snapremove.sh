@@ -1,6 +1,5 @@
 #!/bin/sh
-
-list=$(snap list | grep -Ev "bare|core20|snapd" )
+list=$(snap list | grep -v Name | awk '{print $1}' | tr '\n' ' ' | grep -v % | grep -Ev "bare|core20|snapd")
 sudo snap remove $list
 
 sudo snap remove bare core20 snapd
