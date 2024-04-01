@@ -329,7 +329,8 @@ pwdtail() {
 # adapters=("$lan_adapter" "$radio_adapter")
 
 check_adapters() {
-	source "$BIN_net"/check_adapters_for_shell.sh
+	source "$BIN_net"/check_adapters.sh
+	# adapters=($lan_list $wan_list $docker_list)
 	adapters=($lan_list $wan_list)
 }
 
