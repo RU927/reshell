@@ -328,14 +328,19 @@ pwdtail() {
 #
 # adapters=("$lan_adapter" "$radio_adapter")
 
+# check_adapters() {
+# 	source "$BIN_net"/check_adapters.sh
+# 	# adapters=($lan_list $wan_list $docker_list)
+# 	adapters=($lan_list $wan_list)
+# }
+
 check_adapters() {
-	source "$BIN_net"/check_adapters.sh
-	# adapters=($lan_list $wan_list $docker_list)
-	adapters=($lan_list $wan_list)
+	adapters=()
+	while IFS= read -r line; do
+		adapters+=("$line")
+	done < <(command ls /sys/class/net | grep -Ev "^lo$")
 }
 
-# adapters="$(ip -o a s | awk '$3 == "inet" && $2 != "lo" {print $2}')"
-# adapters="$(command ls /sys/class/net | grep -Ev "^lo$")"
 netinfo() {
 	check_adapters
 	echo "--------------- Network Information ---------------"
