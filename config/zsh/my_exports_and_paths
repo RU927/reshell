@@ -10,13 +10,10 @@ if [ ! -d "${TMP}" ]; then mkdir "${TMP}"; fi
 export TMUX_TMPDIR="${TMPDIR}/tmux-${HOST}-${UID}"
 if [ ! -d "${TMUX_TMPDIR}" ]; then mkdir -p "${TMUX_TMPDIR}"; fi
 
-##########3
+##########
 
 if [ -f "$HOME/.keysdir/export" ]; then
 	export keysdir="$HOME/.keysdir"
-	source "$keysdir/export"
-else
-	echo "keys dir not found"
 fi
 
 # default apps
