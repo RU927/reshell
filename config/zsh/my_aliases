@@ -366,3 +366,18 @@ else
 fi
 
 alias root="sudo -E -s"
+
+PASSWORD_STORE_DIR=~/.password-store
+
+if which pass &>/dev/null; then
+	if [ -n "$(command ls -A $PASSWORD_STORE_DIR)" ]; then
+		if which gh &>/dev/null; then
+			alias gh="GITHUB_TOKEN=$(pass system/github_token) gh"
+			# export GITHUB_TOKEN=("$(pass system/github_token)")
+		fi
+	elif which tomb &>/dev/null; then
+		echo -e "password store closed with tomb"
+	else
+		echo -e "password store is empty"
+	fi
+fi

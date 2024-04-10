@@ -12,7 +12,7 @@ if [ ! -d "${TMUX_TMPDIR}" ]; then mkdir -p "${TMUX_TMPDIR}"; fi
 
 ##########
 
-if [ -f "$HOME/.keysdir/export" ]; then
+if [ -d "$HOME/.keysdir" ]; then
 	export keysdir="$HOME/.keysdir"
 fi
 
