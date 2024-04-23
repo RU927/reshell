@@ -6,10 +6,20 @@ version = "0.21.5"
 local home = os.getenv("HOME")
 local xpm_path = home .. "/.local/share/xplr/dtomvan/xpm.xplr"
 local xpm_url = "https://github.com/dtomvan/xpm.xplr"
-package.path = home .. "/.config/xplr/config/?.lua;" .. home .. "/.config/xplr/?.lua;" .. package.path
-package.path = package.path .. ";" .. home .. "/.config/xplr/config/modes/?.lua;"
-package.path = package.path .. ";" .. home .. "/.config/xplr/plugins/?.lua;"
-package.path = package.path .. ";" .. xpm_path .. "/?.lua;" .. xpm_path .. "/?/init.lua"
+package.path = package.path
+	.. ";"
+	.. home
+	.. "/.config/xplr/config/?.lua;"
+	.. home
+	.. "/.config/xplr/?.lua;"
+	.. home
+	.. "/.config/xplr/config/modes/?.lua;"
+	.. home
+	.. "/.config/xplr/plugins/?.lua;"
+	.. xpm_path
+	.. "/?.lua;"
+	.. xpm_path
+	.. "/?/init.lua"
 
 require("general")
 require("modes")
@@ -19,6 +29,7 @@ require("functions")
 -- require("config.hooks")
 
 os.execute(string.format("[ -e '%s' ] || git clone --depth 1 '%s' '%s'", xpm_path, xpm_url, xpm_path))
+
 require("xpm").setup({
 	plugins = {
 		-- Let xpm manage itself
@@ -48,13 +59,14 @@ require("xpm").setup({
 		-- { name = "sayanarijit/xargs.xplr" },
 		-- { name = "sayanarijit/xclip.xplr" },
 		-- { name = "sayanarijit/zoxide.xplr" },
-		-- { name = "sayanarijit/fzf.xplr" },
+		{ name = "sayanarijit/fzf.xplr" },
 		-- { name = "sayanarijit/map.xplr" },
 		-- { name = "sayanarijit/material-landscape.xplr" },
 		-- { name = "sayanarijit/material-landscape2.xplr" },
 		-- { name = "sayanarijit/zentable.xplr" },
 		{ name = "prncss-xyz/icons.xplr" },
-		-- { name = "dtomvan/extra-icons.xplr" },
+		{ name = "dtomvan/extra-icons.xplr" },
+		{ name = "sayanarijit/map.xplr" },
 		-- { name = "sayanarijit/tree-view.xplr" },
 		{},
 	},
@@ -71,22 +83,34 @@ xplr.config.modes.builtin.default.key_bindings.on_key.x = {
 }
 
 -- Custom Commands: 'open'
--- xplr.config.modes.builtin.default.key_bindings.on_key.o = {
--- 	help = "$open XPLR_FOCUS_PATH",
--- 	messages = {
--- 		{
--- 			BashExecSilently0 = [===[
---         PTH="${XPLR_FOCUS_PATH:?}"
---         open $PTH
---       ]===],
--- 		},
--- 	},
--- }
+xplr.config.modes.builtin.go_to.key_bindings.on_key.x = {
+	help = "open in gui",
+	messages = {
+		{
+			BashExecSilently0 = [===[
+              if [ -z "$OPENER" ]; then
+                if command -v define-app; then
+                  OPENER="define-app -a -r"
+                elif command -v xdg-open; then
+                  OPENER=xdg-open
+                elif command -v mimeopen; then
+                  OPENER="mimeopen -n"
+                else
+                  "$XPLR" -m 'LogError: %q' "$OPENER not found"
+                  exit 1
+                fi
+              fi
+              while IFS= read -r -d '' PTH; do
+                $OPENER "${PTH:?}" > /dev/null 2>&1
+              done < "${XPLR_PIPE_RESULT_OUT:?}"
+            ]===],
+		},
+		"ClearScreen",
+		"PopMode",
+	},
+}
 
--- require("zoxide").setup({
--- 	mode = "default",
--- 	key = "Z",
--- })
+xplr.config.modes.builtin.default.key_bindings.on_key.enter = xplr.config.modes.builtin.go_to.key_bindings.on_key.x
 
 -- require("tri-pane").setup({
 -- 	layout_key = "T", -- In switch_layout mode
@@ -99,6 +123,10 @@ xplr.config.modes.builtin.default.key_bindings.on_key.x = {
 -- })
 
 require("zentable").setup()
+
+require("fzf").setup()
+require("icons").setup()
+require("extra-icons").setup()
 
 require("tree-view").setup({
 	mode = "switch_layout",
@@ -153,3 +181,71 @@ require("tree-view").setup({
 	fallback_layout = "Table",
 	fallback_threshold = 500, -- default: nil (disabled)
 })
+
+local function stat(node)
+	return xplr.util.to_yaml(xplr.util.node(node.absolute_path))
+end
+
+local function read(path, height)
+	local p = io.open(path)
+
+	if p == nil then
+		return nil
+	end
+
+	local i = 0
+	local res = ""
+	for line in p:lines() do
+		if line:match("[^ -~\n\t]") then
+			p:close()
+			return
+		end
+
+		res = res .. line .. "\n"
+		if i == height then
+			break
+		end
+		i = i + 1
+	end
+	p:close()
+
+	return res
+end
+
+xplr.fn.custom.preview_pane = {}
+xplr.fn.custom.preview_pane.render = function(ctx)
+	local title = nil
+	local body = ""
+	local n = ctx.app.focused_node
+	if n and n.canonical then
+		n = n.canonical
+	end
+
+	if n then
+		title = { format = n.absolute_path, style = xplr.util.lscolor(n.absolute_path) }
+		if n.is_file then
+			body = read(n.absolute_path, ctx.layout_size.height) or stat(n)
+		end
+	end
+
+	return { CustomParagraph = { ui = { title = title }, body = body } }
+end
+
+local preview_pane = { Dynamic = "custom.preview_pane.render" }
+local split_preview = {
+	Horizontal = {
+		config = {
+			constraints = {
+				{ Percentage = 60 },
+				{ Percentage = 40 },
+			},
+		},
+		splits = {
+			"Table",
+			preview_pane,
+		},
+	},
+}
+
+xplr.config.layouts.builtin.default =
+	xplr.util.layout_replace(xplr.config.layouts.builtin.default, "Table", split_preview)
