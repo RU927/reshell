@@ -1,0 +1,19 @@
+[font.bold]
+family = "Roboto Mono Nerd Font"
+style = "Bold"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "Roboto Mono Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "Roboto Mono Nerd Font"
+style = "Medium"
+
+[font.offset]
+x = 0
+y = 2

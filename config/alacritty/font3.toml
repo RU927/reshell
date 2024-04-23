@@ -1,0 +1,19 @@
+[font.bold]
+family = "JetBrains Mono Nerd Font"
+style = "Bold"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "JetBrains Mono Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "JetBrains Mono Nerd Font"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 1
