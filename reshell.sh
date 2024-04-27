@@ -67,14 +67,13 @@ checkEnv
 
 install_depend() {
 	## Check for dependencies.
-	DEPENDENCIES='\
-    # autojump \
-    bash bash-completion\
+  DEPENDENCIES=(\
+    bash bash-completion \
     zsh \
     locate mlocate plocate
-    '
+  )
 	echo -e "${YELLOW}Installing dependencies...${RC}"
-	sudo "${PACKAGER}" install -yq ${DEPENDENCIES}
+	sudo "${PACKAGER}" install -yq "${DEPENDENCIES[@]}"
 }
 
 function back_sym {
