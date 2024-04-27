@@ -113,56 +113,6 @@ setopt hist_ignore_space
 #stty -ixon
 setopt noflowcontrol
 
-# Keys.
-case "${TERM}" in
-    st|st-*)
-        bindkey "^[[H" beginning-of-line #Home key
-        bindkey "^[[4~" end-of-line #End key
-        bindkey "^[[P" delete-char #Del key
-        bindkey "^[[A" history-beginning-search-backward #Up Arrow
-        bindkey "^[[B" history-beginning-search-forward #Down Arrow
-        bindkey "^[[1;5C" forward-word # control + right arrow
-        bindkey "^[[1;5D" backward-word # control + left arrow
-        bindkey "^H" backward-kill-word # control + backspace
-        bindkey "^[[M" kill-word # control + delete
-    ;;
-    rxvt*|xterm*)
-        bindkey "^E" beginning-of-line #Home key
-        bindkey "^A" end-of-line #End key
-        bindkey "^[[3~" delete-char #Del key
-        bindkey "^[[A" history-beginning-search-backward #Up Arrow
-        bindkey "^[[B" history-beginning-search-forward #Down Arrow
-        bindkey "^[[1;5C" forward-word # control + right arrow
-        bindkey "^[[1;5D" backward-word # control + left arrow
-        bindkey "^H" backward-kill-word # control + backspace
-        bindkey "^[[3;5~" kill-word # control + delete
-        #plugins keys 
-        # bindkey '^[[1;5A' history-substring-search-up # control + up arrow
-        # bindkey '^[[1;5B' history-substring-search-down # control + down arrow
-    ;;
-
-    linux)
-        bindkey "^[[1~" beginning-of-line #Home key
-        bindkey "^[[4~" end-of-line #End key
-        bindkey "^[[3~" delete-char #Del key
-        bindkey "^[[A" history-beginning-search-backward
-        bindkey "^[[B" history-beginning-search-forward
-    ;;
-
-    screen|screen-*)
-        bindkey "^[[1~" beginning-of-line #Home key
-        bindkey "^[[4~" end-of-line #End key
-        bindkey "^[[3~" delete-char #Del key
-        bindkey "^[[A" history-beginning-search-backward #Up Arrow
-        bindkey "^[[B" history-beginning-search-forward #Down Arrow
-        bindkey "^[Oc" forward-word # control + right arrow
-        bindkey "^[OC" forward-word # control + right arrow
-        bindkey "^[Od" backward-word # control + left arrow
-        bindkey "^[OD" backward-word # control + left arrow
-        bindkey "^H" backward-kill-word # control + backspace
-        bindkey "^[[3^" kill-word # control + delete
-    ;;
-esac
 #принимает несколько слов или их частей (слово*ово)  
 bindkey "^R" history-incremental-pattern-search-backward 
 bindkey "^S" history-incremental-pattern-search-forward
@@ -184,3 +134,17 @@ fi
 
 bindkey -s "^n" "nvims\n"
 
+if [ $SHELL = "/usr/bin/zsh" ] && ! grep -q "emulate sh -c 'source /etc/profile'" /etc/zsh/zprofile /etc/zsh/zlogin; then
+  echo -e "/etc/profile.d/* don't soursed"
+  echo -e "press 'y' for fix it"
+  read -r ask
+  case $ask in
+    y)
+    echo "emulate sh -c 'source /etc/profile'" | sudo tee /etc/zsh/zprofile
+    echo -e "emulate sh -c 'source /etc/profile' added to /etc/zsh/zprofile"
+    echo -e "reboot or"
+    echo "for i in /etc/profile.d/*.sh; do if [ -r \$i ]; then . \$i; fi; done"
+    ;;
+  esac
+fi
+# fpath=(/home/ru/.local/share/zsh/plugins/zsh-completions/src $fpath)

@@ -17,11 +17,14 @@ shell = "zsh"
 [plugins.zsh-autosuggestions]
 github = 'zsh-users/zsh-autosuggestions'
 
+# [plugins.forgit]
+# github = 'wfxr/forgit'
+
+[plugins.zsh-completions]
+github = 'zsh-users/zsh-completions'
+
 [plugins.zsh-syntax-highlighting]
 github = 'zsh-users/zsh-syntax-highlighting.git'
-
-[plugins.forgit]
-github = 'wfxr/forgit'
 
 # For example:
 #
