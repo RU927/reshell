@@ -1,4 +1,5 @@
 config/tmux/plugins
+config/tmux/newsboat
 config/atuin/.nvimlog
 config/vifm/vifminfo.json
 config/ranger/__pycache__
