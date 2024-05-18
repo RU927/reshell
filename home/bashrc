@@ -54,7 +54,7 @@ PROMPT_COMMAND='history -a'
 
 # Define directory exports that my_functions use.
 
-GIT_HOME=$HOME/REPOS
+GIT_HOME=$HOME/aggregate
 export GIT_HOME
 
 DOT_SHELL=$GIT_HOME/re_shell

@@ -4,7 +4,7 @@
 export XDG_CONFIG_HOME="$HOME/.config"
 # export XDG_CURRENT_DESKTOP="KDE"
 
-# GIT_HOME=$HOME/REPOS
+# GIT_HOME=$HOME/aggregate
 # DOT_SHELL=$GIT_HOME/re_shell
 # DOT_SHELL=$GIT_HOME/re_shell
 # SHELLSOURCE=$DOT_SHELL/home/sources
