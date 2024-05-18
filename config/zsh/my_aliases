@@ -201,13 +201,16 @@ alias .ra='cd $XDG_CONFIG_HOME/ranger'
 alias ,et='$EDITOR $XDG_CONFIG_HOME/tmux/tmux.conf.local'
 alias ,ev='$EDITOR $HOME/.vimrc'
 
-alias ,ma='$EDITOR $SHELLSOURCE/my_aliases'
 alias ,mb='$EDITOR $HOME/.bashrc'
-alias ,mc='$EDITOR $SHELLSOURCE/my_completions'
-alias ,me='$EDITOR $SHELLSOURCE/my_exports_and_paths'
-alias ,mf='$EDITOR $SHELLSOURCE/my_functions'
-alias ,mzp='$EDITOR $SHELLSOURCE/my_zsh_prompt'
-alias ,mbp='$EDITOR $SHELLSOURCE/my_bash_prompt'
+# alias ,mbp='$EDITOR /my_bash_prompt'
+
+alias ,ma='$EDITOR $ZSHDDIR/my_aliases'
+alias ,mc='$EDITOR $ZSHDDIR/my_completions'
+alias ,me='$EDITOR $ZSHDDIR/my_exports_and_paths'
+alias ,mep='$EDITOR $ZSHDDIR/my_export_private'
+alias ,mf='$EDITOR $ZSHDDIR/my_functions'
+alias ,mzf='$EDITOR $ZSHDDIR/my_functions'
+alias ,mzp='$EDITOR $ZSHDDIR/my_zsh_prompt'
 
 alias ,mz='$EDITOR $HOME/.zshrc'
 
