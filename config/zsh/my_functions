@@ -494,7 +494,7 @@ view_csv() {
 		# command cat "$1" | column -t -s, | less -S
 	fi
 }
-alias csv="view_csv"
+alias csv=view_csv
 
 yt() {
 	if programExists yt-dlp; then
@@ -521,3 +521,11 @@ fzf_select_dir() {
 fzf_select_file() {
 	fzf_select_path "$@"
 }
+
+path() { sed 's/:/\n/g' <<< $PATH; }
+
+ew() {
+	$EDITOR "$(which "$1")"
+}
+bindkey -s "e\t" "$EDITOR $(which !!)^M"
+
