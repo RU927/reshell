@@ -252,7 +252,7 @@ tmux_conf_theme_right_separator_sub="|"
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
-tmux_conf_theme_status_right=" #{prefix}#{mouse}#{pairing}#{synchronized} , %R , %d %b | #{username}#{root} | #{hostname} "
+tmux_conf_theme_status_right=" nb:#{newsboat_unread_articles} |  #{prefix}#{mouse}#{pairing}#{synchronized} , %R , %d %b | #{username}#{root} | #{hostname} "
 
 # status left style
 tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_6,$tmux_conf_theme_colour_7,$tmux_conf_theme_colour_8"
@@ -260,9 +260,9 @@ tmux_conf_theme_status_left_bg="$tmux_conf_theme_colour_17,$tmux_conf_theme_colo
 tmux_conf_theme_status_left_attr="bold,none,none"
 
 # status right style
-tmux_conf_theme_status_right_fg="$tmux_conf_theme_colour_12,$tmux_conf_theme_colour_13,$tmux_conf_theme_colour_14"
-tmux_conf_theme_status_right_bg="$tmux_conf_theme_colour_2,$tmux_conf_theme_colour_3,$tmux_conf_theme_colour_17"
-tmux_conf_theme_status_right_attr="none,none,bold"
+tmux_conf_theme_status_right_fg="$tmux_conf_theme_colour_13,$tmux_conf_theme_colour_12,$tmux_conf_theme_colour_13,$tmux_conf_theme_colour_14"
+tmux_conf_theme_status_right_bg="$tmux_conf_theme_colour_3,$tmux_conf_theme_colour_2,$tmux_conf_theme_colour_3,$tmux_conf_theme_colour_17"
+tmux_conf_theme_status_right_attr="none,none,none,bold"
 
 # pairing indicator
 tmux_conf_theme_pairing="⚇"                 # U+2687
@@ -423,8 +423,10 @@ tmux_conf_uninstall_plugins_on_reload=true
 # set -g @plugin 'tmux-plugins/tmux-yank'
 # set -g @plugin 'tmux-plugins/tmux-pain-control'
 # set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
-
+set -g @plugin 'tmux-plugins/tmux-newsboat'
 # set -g @resurrect-capture-pane-contents 'on'
+set -g @treemux-tree-nvim-init-file '~/.config/tmux/plugins/treemux/configs/treemux_init.lua'
+set -g @plugin 'kiyoon/treemux'
 
 # set -g @continuum-restore 'on'
 
