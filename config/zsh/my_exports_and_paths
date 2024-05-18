@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f /etc/hostname ]; then
+	export HOSTNAME="$(cat /etc/hostname)"
+fi
+
 export TMP="$HOME/tmp"
 export TEMP="$TMP"
 export TMPDIR="$TMP"
@@ -37,6 +41,7 @@ export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 
 ###
 prependToPath "$HOME"/.local/bin
+prependToPath "$HOME"/bin
 # appendToPath "/usr/games"
 
 ### Packagemanagers
