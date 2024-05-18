@@ -21,23 +21,22 @@ if [ "$USER" = 'root' ] && [ "$(cut -d ' ' -f 19 /proc/$$/stat)" -gt 0 ]; then
     renice -n 0 -p "$$" && echo "# Adjusted nice level for current shell to 0."
 fi
 
-# ZDOTDIR=${ZDOTDIR:-${HOME}}
-# ZSHDDIR="${HOME}/.config/zsh"
-
+# if [ -f ~/.alert ]; then echo '>>> Check ~/.alert'; fi
 
 HISTFILE="${HOME}/.zsh_history"
 HISTSIZE='128000'
 SAVEHIST='128000'
 
+# ZDOTDIR=${ZDOTDIR:-${HOME}}
+# ZSHDDIR="${HOME}/.config/zsh"
+
 DOT_SHELL=$GIT_HOME/re_shell
-# SHELLSOURCE=$DOT_SHELL/home/sources
-SHELLSOURCE=$ZSHDDIR
 
 my_sourses=("aliases" "zsh_prompt")
 
 if [[ -o interactive ]]; then
   for m in "${my_sourses[@]}"; do
-    [[ -f "$SHELLSOURCE/my_$m" ]] && source "$SHELLSOURCE/my_$m"
+    [[ -f "$ZSHDDIR/my_$m" ]] && source "$ZSHDDIR/my_$m"
   done
 fi
 
@@ -47,6 +46,10 @@ fi
 # for m in "${my_array[@]}"; do
 # 	[[ -f "$ZSHDDIR/zsh$m" ]] && source "$ZSHDDIR/zsh$m" || echo "Note: $ZSHDDIR/zsh$m in unavailable"
 # done
+
+# (switch to Emacs mode)
+bindkey -e
+# bindkey -v
 
 ## Стек Каталогов
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
@@ -63,30 +66,10 @@ setopt pushd_ignore_dups                    ## Удалить повторяющ
 setopt pushd_minus                          ## oтменяет +/- операторы.
 bindkey -s "q\t" "cd -\t"                   ## q<tab> - for open dirstack
 
-# extended globbing, awesome!
-setopt extendedGlob
-
-# Turn on command substitution in the prompt (and parameter expansion and arithmetic expansion).
-setopt promptsubst
-
-# zmv -  a command for renaming files by means of shell patterns.
-autoload -U zmv
-
-# zargs, as an alternative to find -exec and xargs.
-autoload -U zargs
-
-# (switch to Emacs mode)
-bindkey -e
-# bindkey -v
-
-# Control-x-e to open current line in $EDITOR
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey '^x^e' edit-command-line
-
 # Completion.
 autoload -Uz compinit
 compinit
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' menu select=2
@@ -94,20 +77,23 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion:*:descriptions' format '%U%F{YELLOW}%d%f%u'
 
-
 setopt interactivecomments  # Игнорировать записи с префиксом '#'.
 setopt hist_ignore_dups     # Игнорируйте дубликаты в истории.
 setopt hist_ignore_space    # Запрет записи в истории, если перед ней есть пробелы.
 
-# Nobody need flow control anymore. Проблемная функция.
-# stty -ixon
-setopt noflowcontrol
+# extended globbing, awesome!
+setopt extendedGlob
 
-#принимает несколько слов или их частей (слово*ово)  
-bindkey "^R" history-incremental-pattern-search-backward 
-bindkey "^S" history-incremental-pattern-search-forward
+# Turn on command substitution in the prompt (and parameter expansion and arithmetic expansion).
+setopt promptsubst
 
-# if [ -f ~/.alert ]; then echo '>>> Check ~/.alert'; fi
+# zargs, as an alternative to find -exec and xargs.
+autoload -U zargs
+
+# Control-x-e to open current line in $EDITOR
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line
 
 #plugins
 if (( $+commands[sheldon] )); then              # только для zsh
@@ -123,6 +109,10 @@ if (( $+commands[navi] )); then
 fi
 
 bindkey -s "^n" "navi\n"
+
+#принимает несколько слов или их частей (слово*ово)  
+bindkey "^R" history-incremental-pattern-search-backward 
+bindkey "^S" history-incremental-pattern-search-forward
 
 # if [ $SHELL = "/usr/bin/zsh" ] && ! grep -q "emulate sh -c 'source /etc/profile'" /etc/zsh/zprofile /etc/zsh/zlogin; then
 #   echo -e "/etc/profile.d/* don't soursed"
