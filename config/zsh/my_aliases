@@ -359,7 +359,12 @@ alias rmv='rsync -v --progress --remove-source-files'
 alias chmod="chmod -c"
 alias chown="chown -c"
 
-if command -v colordiff >/dev/null 2>&1; then
+
+if command -v diff-so-fancy >/dev/null 2>&1; then
+  function diff() {
+    command diff -u "$@" | diff-so-fancy
+  }
+elif command -v colordiff >/dev/null 2>&1; then
 	diff_ex=colordiff
 	function diff() {
 		$diff_ex -Nuar "$@" | command less -R
